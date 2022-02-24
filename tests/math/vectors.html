@@ -5,6 +5,158 @@
     <meta name="viewport" content="width=device-width">
     <title>Vector tests</title>
   </head>
-  <body>
+  <body style="margin: 0; padding: 0;">
+    <pre id="results" style="margin: 0; padding: 2px;"></pre>
+
+    <!-- Main -->
+    <script type="module">
+      const res = document.getElementById("results");
+
+      // Execute a test suite
+      function test(name, bArr) {
+        res.innerHTML += "<b>" + name + "</b>: <br>";
+        bArr.forEach((b, ind) => {
+          if (ind % 4 === 1 && ind !== 1) res.innerHTML += "<br>";
+          if (b()) {
+            res.innerHTML += "#" + ind + " => ✅, ";
+          } else {
+            res.innerHTML += "#" + ind + " => ❌, ";
+          }
+        });
+        res.innerHTML += "<br><br>";
+      }
+
+      // Compare two arrays
+      function eq(v1, v2) {
+        return v1.length === v2.length
+          && v1.every((v, ind) => v2[ind] === v);
+      }
+
+      // Start testing vectors
+      import {Vec4} from "/src/all.js";
+
+      test("Vec4 constructors", [
+        // Default constructor
+        () => eq(new Vec4(1, 2, 3, 4).values, [1, 2, 3, 4]),
+
+        // Zeros, Ones, All
+        () => eq(Vec4.Zeros().values, [0, 0, 0, 0]),
+        () => eq(Vec4.Ones().values, [1, 1, 1, 1]),
+        () => eq(Vec4.All(0.5).values, [0.5, 0.5, 0.5, 0.5]),
+
+        // From array
+        () => eq(Vec4.FromArray([2, 4, 6, 8]).values, [2, 4, 6, 8]),
+
+        // Copy
+        () => eq(Vec4.Copy(new Vec4(2, 4, 6, 8)).values, [2, 4, 6, 8])
+      ]);
+
+      test("Vec4 accessors", [
+        // Getter x, y, z, w
+        () => {
+          const vec = new Vec4(1, 2, 3, 4);
+          return vec.x === 1 && vec.y === 2 && vec.z === 3 && vec.w === 4;
+        },
+        
+        // Getter r, g, b, a
+        () => {
+          const vec = new Vec4(1, 2, 3, 4);
+          return vec.r === 1 && vec.g === 2 && vec.b === 3 && vec.a === 4;
+        },
+        
+        // Setter x, y, z, w
+        () => {
+          const vec = new Vec4(1, 2, 3, 4);
+          vec.x += 1;
+          vec.y += 2;
+          vec.z += 3;
+          vec.w += 4;
+          return vec.x === 2 && vec.y === 4 && vec.z === 6 && vec.w === 8;
+        },
+
+        // Setter r, g, b, a
+        () => {
+          const vec = new Vec4(1, 2, 3, 4);
+          vec.r += 1;
+          vec.g += 2;
+          vec.b += 3;
+          vec.a += 4;
+          return vec.r === 2 && vec.g === 4 && vec.b === 6 && vec.a === 8;
+        },
+      ]);
+
+      test("Vec4 operations", [
+        // toString
+        () => {
+          return (new Vec4(1, 2, 3, 4)) == "[1,2,3,4]";
+        },
+
+        // Copy
+        () => {
+          const a = Vec4.Zeros();
+          a.x = 2;
+          const b = Vec4.Copy(a);
+          b.x = 3;
+          b.w = 2;
+          return eq(a.values, [2, 0, 0, 0]) && eq(b.values, [3, 0, 0, 2]);
+        },
+
+        // Add
+        () => {
+          const a = Vec4.Zeros();
+          const b = Vec4.Zeros();
+          const c = Vec4.Zeros();
+          const o = new Vec4(1, 2, 3, 4);
+          c.add(o);
+          return eq(a.add(o).values, [1, 2, 3, 4])
+            && eq(b.add(o).add(o).values, [2, 4, 6, 8])
+            && eq(c.values, [1, 2, 3, 4]);
+        },
+
+        // Sub
+        () => {
+          const a = Vec4.Zeros();
+          const b = Vec4.Zeros();
+          const c = Vec4.Zeros();
+          const o = new Vec4(1, 2, 3, 4);
+          c.sub(o);
+          return eq(a.sub(o).values, [-1, -2, -3, -4])
+            && eq(b.sub(o).sub(o).values, [-2, -4, -6, -8])
+            && eq(c.values, [-1, -2, -3, -4]);
+        },
+
+        // Mul
+        () => {
+          const a = Vec4.Ones();
+          const b = Vec4.Ones();
+          const c = new Vec4(1, 2, 3, 4);
+          const f = 1.5;
+          c.mul(f);
+          return eq(a.mul(f).values, [1.5, 1.5, 1.5, 1.5])
+            && eq(b.mul(f).mul(f).values, [2.25, 2.25, 2.25, 2.25])
+            && eq(c.values, [1.5, 3, 4.5, 6]);
+        },
+
+        // Dot
+        () => {
+          const a = Vec4.Zeros();
+          const b = Vec4.Ones();
+          const c = new Vec4(1, 2, 3, 4);
+          return a.dot(b) === 0 && a.dot(c) === 0
+            && b.dot(c) === 10 && c.dot(c) === 30;
+        },
+
+        // Magnitude
+        () => {
+          
+        },
+
+        // Magnitude Squared
+        () => {
+          
+        }
+      ]);
+    </script>
+    <!--    -->
   </body>
 </html>

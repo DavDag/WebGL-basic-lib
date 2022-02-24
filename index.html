@@ -5,17 +5,57 @@
     <meta name="viewport" content="width=device-width">
     <title>Lib tests</title>
     <style>
+      body {
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        box-sizing: border-box;
+      }
       iframe {
         padding: 0;
         margin: 0;
-        border: dashed 2px black;
+        width: 400px;
+        height: 400px;
+        border: 2px solid black;
+        box-sizing: border-box;
+      }
+      div {
+        width: 400px;
+        min-height: 0px;
+        max-height: 432px;
+        margin-top: 8px;
+        margin-right: 8px;
+        box-sizing: border-box;
+      }
+      div button {
+        width: 100%;
+        height: 32px;
+        box-sizing: border-box;
       }
     </style>
   </head>
   <body>
-    <iframe width="400" height="400" src="./tests/2d/triangle.html"></iframe>
-    <iframe width="400" height="400" src="./tests/2d/quad.html"></iframe>
-    <iframe width="400" height="400" src="./tests/math/vectors.html"></iframe>
-    <iframe width="400" height="400" src="./tests/math/matrices.html"></iframe>
+    <!-- WebGL -->
+    <!--
+    <div>
+      <button onclick="document.getElementById('f1').toggleAttribute('hidden')">Triangle</button>
+      <iframe id="f1" src="./tests/2d/triangle.html"></iframe>
+    </div>
+    <div>
+      <button onclick="document.getElementById('f2').toggleAttribute('hidden')">Quad</button>
+      <iframe id="f2" src="./tests/2d/quad.html"></iframe>
+    </div>
+    -->
+
+    <!-- Math -->
+    <div>
+      <button onclick="document.getElementById('f3').toggleAttribute('hidden')">Vectors</button>
+      <iframe id="f3" src="./tests/math/vectors.html"></iframe>
+    </div>
+    <div>
+      <button onclick="document.getElementById('f4').toggleAttribute('hidden')">Matrices</button>
+      <iframe id="f4" src="./tests/math/matrices.html"></iframe>
+    </div>
   </body>
 </html>
