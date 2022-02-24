@@ -1,31 +1,51 @@
+/** @author: Davide Risaliti davdag24@gmail.com */
+
+/**
+ * @class Shader representing an OpenGL shader
+ */
 export class Shader {
-  // 
-  constructor(gl, shaderType, shaderSrc) {
+  /**
+   * Creates an instance of a Shader.
+   *
+   * @param {WebGLRenderingContext} gl the WebGL context
+   * @param {gl.ENUM_TYPE} type the Shader type
+   * @param {string} src the Shader source
+   */
+  constructor(gl, type, src) {
     this.gl   = gl;
-    this.id   = Shader.CompileShader(gl, shaderType, shaderSrc);
-    this.src  = shaderSrc;
-    this.type = shaderType;
+    this.id   = null;
+    this.src  = src;
+    this.type = type;
+    this.#compileShader();
   }
 
-  //
-  static CompileShader(gl, shaderType, shaderSrc) {
+  /**
+   * Compiles the Shader.
+   *
+   * @param {WebGLRenderingContext} gl the WebGL context
+   * @param {gl.ENUM_TYPE} type the Shader type
+   * @param {string} src the Shader source
+   *
+   * @throws an Error when the Shader does not compile successfully
+   */
+  #compileShader() {
     // Create shader object
-    const shader = gl.createShader(shaderType);
+    const shader = this.gl.createShader(this.type);
 
     // Set source code
-    gl.shaderSource(shader, shaderSrc);
+    this.gl.shaderSource(shader, this.src);
   
     // Compile shader
-    gl.compileShader(shader);
+    this.gl.compileShader(shader);
 
     // Check compilation results
-    const status = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-    const log    = gl.getShaderInfoLog(shader);
+    const status = this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS);
+    const log    = this.gl.getShaderInfoLog(shader);
 
     // Validate shader
-    if (status === gl.GL_FALSE || log != "") throw new Error("{SHADER-ERROR}: " + log);
+    if (status === this.gl.GL_FALSE || log != "") throw new Error("{SHADER-ERROR}: " + log);
   
     // Result
-    return shader;
+    this.id = shader;
   }
 }
