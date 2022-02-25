@@ -353,7 +353,7 @@ export class Mat4 extends Mat {
   }
   
   /**
-   * Create the lookAt matrix.
+   * Create the LookAt matrix.
    *
    * @param {Vec3} from the source point
    * @param {Vec3} to the target point
@@ -361,7 +361,7 @@ export class Mat4 extends Mat {
    *
    * @return {Mat} the newly created Mat4
    */
-  static lookAt(from, to, up) {
+  static LookAt(from, to, up) {
     if (from.equals(to)) return Mat4.identity();
 
     const z = from.clone().sub(to).normalize();
@@ -389,6 +389,48 @@ export class Mat4 extends Mat {
     arr[13] = 0;
     arr[14] = 0;
     arr[15] = 1;
+    
+    return Mat4.FromArray(arr);
+  }
+  
+  /**
+   * Create the Perspective matrix.
+   *
+   * @param {number} fovY the field of view (in radians)
+   * @param {number} ratio the aspect ratio (typically w/h)
+   * @param {number} near the near Plane
+   * @param {number} far the far Plane
+   *
+   * @return {Mat} the newly created Mat4
+   */
+  static Perspective(fovY, ratio, near, far) {
+    const f = 1.0 / Math.tan(fovY / 2);
+    
+    const arr = new Array(16);
+    
+    arr[ 0] = f / ratio;
+    arr[ 4] = 0;
+    arr[ 8] = 0;
+    arr[12] = 0;
+    arr[ 1] = 0;
+    arr[ 5] = f;
+    arr[ 9] = 0;
+    arr[13] = 0;
+    arr[ 2] = 0;
+    arr[ 6] = 0;
+    arr[14] = -1;
+    arr[ 3] = 0;
+    arr[ 7] = 0;
+    arr[15] = 0;
+
+    if (f !== Number.Infinity) {
+      const nf = 1 / (near - far);
+      arr[10] = (far + near) * nf;
+      arr[11] = 2 * far * near * nf;
+    } else {
+      arr[10] = -1;
+      arr[11] = -2 * near;
+    }
     
     return Mat4.FromArray(arr);
   }

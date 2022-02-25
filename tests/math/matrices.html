@@ -494,12 +494,22 @@
       test("Special operations", [
         // [#0] Look At
         () => {
-          const a = Mat4.lookAt(new Vec3(0, 1, -1), new Vec3(1, 2, 3), new Vec3(0, 1, 0));
+          const a = Mat4.LookAt(new Vec3(0, 1, -1), new Vec3(1, 2, 3), new Vec3(0, 1, 0));
           a.round(2);
           return eq(a.values, new Float32Array([-0.97,     0,  0.24,  0.24,
                                                 -0.06,  0.97, -0.23, -1.20,
                                                 -0.24, -0.24, -0.94, -0.71,
                                                     0,     0,     0,     1]));
+        },
+
+        // [#1] Perspective
+        () => {
+          const a = Mat4.Perspective(100, 1.1, 0, 1000);
+          a.round(2);
+          return eq(a.values, new Float32Array([-3.34,     0,  0, 0,
+                                                    0, -3.68,  0, 0,
+                                                    0,     0, -1, 0,
+                                                    0,     0, -1, 0]));
         }
       ])
     </script>
