@@ -4,7 +4,7 @@
  * @class Vec base vector class.
  */
 export class Vec {
-  _values;
+  values;
 
   /**
    * Creates an instance of a Vec.
@@ -12,7 +12,7 @@ export class Vec {
    * @param {array of number} arr the array of values
    */
   constructor(arr) {
-    this._values = new Float32Array(arr);
+    this.values = new Float32Array(arr);
   }
 
   /**
@@ -21,17 +21,20 @@ export class Vec {
    * 
    * @return {number} the num of elements
    */
-  count() {
-    return 0;
+  static count() {
+    throw new Error("count() not implemented");
   }
 
   /**
-   * Getter to retrieve the values as Float32Array.
+   * Syntactic-sugar for a Vec initialization with equal values.
+   * Should be implemented by specialized classes.
    * 
-   * @return {Float32Array} values array
+   * @param {array of number} arr the array to copy
+   * 
+   * @return {Vec} the newly created vector
    */
-  get values() {
-    return this._values;
+  static FromArray(arr) {
+    throw new Error("FromArray() not implemented");
   }
 
   /**
@@ -40,7 +43,21 @@ export class Vec {
    * @return {string} string representation
    */
   toString() {
-    return "[" + this._values.join(",") + "]";
+    return "[" + this.values.join(",") + "]";
+  }
+
+  /**
+   * Compare the two Vec.
+   *
+   * @param {Vec} vec the vector to compare
+   *
+   * @return {boolean} if the Vec are equals
+   */
+  equals(vec) {
+    for (let i = 0; i < this.constructor.count(); ++i)
+      if (this.values[i] !== vec.values[i])
+        return false;
+    return true;
   }
 
   /**
@@ -52,8 +69,8 @@ export class Vec {
    * @return {Vec} this
    */
   add(vec) {
-    for (let i = 0; i < this.count(); ++i)
-      this._values[i] += vec._values[i];
+    for (let i = 0; i < this.constructor.count(); ++i)
+      this.values[i] += vec.values[i];
     return this;
   }
 
@@ -66,22 +83,84 @@ export class Vec {
    * @return {Vec} this
    */
   sub(vec) {
-    for (let i = 0; i < this.count(); ++i)
-      this._values[i] -= vec._values[i];
+    for (let i = 0; i < this.constructor.count(); ++i)
+      this.values[i] -= vec.values[i];
     return this;
   }
 
   /**
-   * Multiply the Vec by a factor.
+   * Scale up the Vec by a factor.
    * Operations can be concatenated.
    *
-   * @param {number} factor the factor to multiply
+   * @param {number} factor the scale
    *
    * @return {Vec} this
    */
   mul(factor) {
-    for (let i = 0; i < this.count(); ++i)
-      this._values[i] *= factor;
+    for (let i = 0; i < this.constructor.count(); ++i)
+      this.values[i] *= factor;
+    return this;
+  }
+
+  /**
+   * Scale down the Vec by a factor.
+   * Operations can be concatenated.
+   *
+   * @param {number} factor the scale
+   *
+   * @return {Vec} this
+   */
+  div(factor) {
+    for (let i = 0; i < this.constructor.count(); ++i)
+      this.values[i] /= factor;
+    return this;
+  }
+
+  /**
+   * Round the Vec.
+   * Operations can be concatenated.
+   *
+   * @param {number} decimal the decimal places to left
+   *
+   * @return {Vec} this
+   */
+  round(decimal) {
+    for (let i = 0; i < this.constructor.count(); ++i)
+      this.values[i] = this.values[i].toFixed(decimal);
+    return this;
+  }
+
+  /**
+   * Normalize the Vec.
+   * Operations can be concatenated.
+   *
+   * @return {Vec} this
+   */
+  normalize() {
+    return this.div(this.magnitude());
+  }
+
+  /**
+   * Inverse the Vec.
+   * Operations can be concatenated.
+   *
+   * @return {Vec} this
+   */
+  inverse() {
+    for (let i = 0; i < this.constructor.count(); ++i)
+      this.values[i] = 1 / this.values[i];
+    return this;
+  }
+
+  /**
+   * Negate the Vec.
+   * Operations can be concatenated.
+   *
+   * @return {Vec} this
+   */
+  negate() {
+    for (let i = 0; i < this.constructor.count(); ++i)
+      this.values[i] = -this.values[i];
     return this;
   }
 
@@ -94,8 +173,75 @@ export class Vec {
    */
   dot(vec) {
     let sum = 0;
-    for (let i = 0; i < this.count(); ++i)
-      sum += this._values[i] * vec._values[i];
+    for (let i = 0; i < this.constructor.count(); ++i)
+      sum += this.values[i] * vec.values[i];
     return sum;
+  }
+
+  /**
+   * Compute the length of the Vec.
+   *
+   * @return {number} the length
+   */
+  magnitude() {
+    return Math.sqrt(this.magnitude_squared());
+  }
+
+  /**
+   * Compute the length squared of the Vec.
+   *
+   * @return {number} the length squared
+   */
+  magnitude_squared() {
+    return this.dot(this);
+  }
+
+  /**
+   * Syntactic-sugar for a Vec clone.
+   * 
+   * @return {Vec} the newly created vector
+   */
+  clone() {
+    return this.constructor.Copy(this);
+  }
+
+  /**
+   * Syntactic-sugar for a Vec initialization with equal values.
+   * 
+   * @param {number} v the value to be used for every coordinate
+   * 
+   * @return {Vec} the newly created vector
+   */
+  static All(v) {
+    return this.FromArray(new Array(this.count()).fill(v));
+  }
+
+  /**
+   * Syntactic-sugar for a Vec initialization from another Vec.
+   * 
+   * @param {Vec} vec the vector to copy
+   * 
+   * @return {Vec} the newly created vector
+   */
+  static Copy(vec) {
+    return this.FromArray(vec.values);
+  }
+
+  /**
+   * Syntactic-sugar for a Vec initialization with zeros.
+   *
+   * @return {Vec} the newly created vector
+   */
+  static Zeros() {
+    return this.All(0);
+  }
+
+  /**
+   * Syntactic-sugar for a Vec initialization with ones.
+   *
+   * @return {Vec} the newly created vector
+   */
+  static Ones() {
+    return this.All(1);
   }
 }

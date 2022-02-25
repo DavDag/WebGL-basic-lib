@@ -14,13 +14,14 @@
 
       // Execute a test suite
       function test(name, bArr) {
-        res.innerHTML += "<b>" + name + "</b>: <br>";
+        res.innerHTML += "<i>" + name + "</i>: <br>";
         bArr.forEach((b, ind) => {
-          if (ind % 4 === 1 && ind !== 1) res.innerHTML += "<br>";
+          if (ind % 4 === 0 && ind !== 0) res.innerHTML += "<br>";
+          if (ind < 10) ind = "0" + ind;
           if (b()) {
-            res.innerHTML += "#" + ind + " => ✅, ";
+            res.innerHTML += "#" + ind + " => ✅ ";
           } else {
-            res.innerHTML += "#" + ind + " => ❌, ";
+            res.innerHTML += "#" + ind + " => ❌ ";
           }
         });
         res.innerHTML += "<br><br>";
@@ -33,38 +34,132 @@
       }
 
       // Start testing vectors
-      import {Vec4} from "/src/all.js";
+      import {Vec2, Vec3, Vec4} from "/src/all.js";
+
+      test("Vec2 constructors", [
+        // [#0] Default constructor
+        () => eq(new Vec2(1, 2).values, [1, 2]),
+
+        // [#1] Zeros, Ones, All
+        () => eq(Vec2.Zeros().values, [0, 0]),
+        () => eq(Vec2.Ones().values, [1, 1]),
+        () => eq(Vec2.All(0.5).values, [0.5, 0.5]),
+
+        // [#2] From array
+        () => eq(Vec2.FromArray([2, 4]).values, [2, 4]),
+
+        // [#3] Copy
+        () => eq(Vec2.Copy(new Vec2(2, 4)).values, [2, 4])
+      ]);
+
+      test("Vec3 constructors", [
+        // [#0] Default constructor
+        () => eq(new Vec3(1, 2, 3).values, [1, 2, 3]),
+
+        // [#1] Zeros, Ones, All
+        () => eq(Vec3.Zeros().values, [0, 0, 0]),
+        () => eq(Vec3.Ones().values, [1, 1, 1]),
+        () => eq(Vec3.All(0.5).values, [0.5, 0.5, 0.5]),
+
+        // [#2] From array
+        () => eq(Vec3.FromArray([2, 4, 6]).values, [2, 4, 6]),
+
+        // [#3] Copy
+        () => eq(Vec3.Copy(new Vec3(2, 4, 6)).values, [2, 4, 6])
+      ]);
 
       test("Vec4 constructors", [
-        // Default constructor
+        // [#0] Default constructor
         () => eq(new Vec4(1, 2, 3, 4).values, [1, 2, 3, 4]),
 
-        // Zeros, Ones, All
+        // [#1] Zeros, Ones, All
         () => eq(Vec4.Zeros().values, [0, 0, 0, 0]),
         () => eq(Vec4.Ones().values, [1, 1, 1, 1]),
         () => eq(Vec4.All(0.5).values, [0.5, 0.5, 0.5, 0.5]),
 
-        // From array
+        // [#2] From array
         () => eq(Vec4.FromArray([2, 4, 6, 8]).values, [2, 4, 6, 8]),
 
-        // Copy
+        // [#3] Copy
         () => eq(Vec4.Copy(new Vec4(2, 4, 6, 8)).values, [2, 4, 6, 8])
       ]);
 
+      test("Vec2 accessors", [
+        // [#0] Getter x, y
+        () => {
+          const vec = new Vec2(1, 2);
+          return vec.x === 1 && vec.y === 2;
+        },
+        
+        // [#1] Getter w, h
+        () => {
+          const vec = new Vec2(1, 2);
+          return vec.w === 1 && vec.h === 2;
+        },
+        
+        // [#2] Setter x, y
+        () => {
+          const vec = new Vec2(1, 2);
+          vec.x += 1;
+          vec.y += 2;
+          return vec.x === 2 && vec.y === 4;
+        },
+
+        // [#3] Setter w, h
+        () => {
+          const vec = new Vec2(1, 2);
+          vec.w += 1;
+          vec.h += 2;
+          return vec.w === 2 && vec.h === 4;
+        }
+      ]);
+
+      test("Vec3 accessors", [
+        // [#0] Getter x, y, z
+        () => {
+          const vec = new Vec3(1, 2, 3);
+          return vec.x === 1 && vec.y === 2 && vec.z === 3;
+        },
+        
+        // [#1] Getter r, g, b
+        () => {
+          const vec = new Vec3(1, 2, 3);
+          return vec.r === 1 && vec.g === 2 && vec.b === 3;
+        },
+        
+        // [#2] Setter x, y, z
+        () => {
+          const vec = new Vec3(1, 2, 3);
+          vec.x += 1;
+          vec.y += 2;
+          vec.z += 3;
+          return vec.x === 2 && vec.y === 4 && vec.z === 6;
+        },
+
+        // [#3] Setter r, g, b
+        () => {
+          const vec = new Vec3(1, 2, 3);
+          vec.r += 1;
+          vec.g += 2;
+          vec.b += 3;
+          return vec.r === 2 && vec.g === 4 && vec.b === 6;
+        },
+      ]);
+
       test("Vec4 accessors", [
-        // Getter x, y, z, w
+        // [#0] Getter x, y, z, w
         () => {
           const vec = new Vec4(1, 2, 3, 4);
           return vec.x === 1 && vec.y === 2 && vec.z === 3 && vec.w === 4;
         },
         
-        // Getter r, g, b, a
+        // [#1] Getter r, g, b, a
         () => {
           const vec = new Vec4(1, 2, 3, 4);
           return vec.r === 1 && vec.g === 2 && vec.b === 3 && vec.a === 4;
         },
         
-        // Setter x, y, z, w
+        // [#2] Setter x, y, z, w
         () => {
           const vec = new Vec4(1, 2, 3, 4);
           vec.x += 1;
@@ -74,7 +169,7 @@
           return vec.x === 2 && vec.y === 4 && vec.z === 6 && vec.w === 8;
         },
 
-        // Setter r, g, b, a
+        // [#3] Setter r, g, b, a
         () => {
           const vec = new Vec4(1, 2, 3, 4);
           vec.r += 1;
@@ -85,13 +180,307 @@
         },
       ]);
 
+      test("Vec2 operations", [
+        // [#0] toString
+        () => {
+          return (new Vec2(1, 2)) == "[1,2]";
+        },
+
+        // [#1] Copy
+        () => {
+          const a = Vec2.Zeros();
+          a.x = 2;
+          const b = Vec2.Copy(a);
+          b.x = 3;
+          b.y = 2;
+          return eq(a.values, [2, 0]) && eq(b.values, [3, 2]);
+        },
+
+        // [#2] Add
+        () => {
+          const a = Vec2.Zeros();
+          const b = Vec2.Zeros();
+          const c = Vec2.Zeros();
+          const o = new Vec2(1, 2);
+          c.add(o);
+          return eq(a.add(o).values, [1, 2])
+            && eq(b.add(o).add(o).values, [2, 4])
+            && eq(c.values, [1, 2]);
+        },
+
+        // [#3] Sub
+        () => {
+          const a = Vec2.Zeros();
+          const b = Vec2.Zeros();
+          const c = Vec2.Zeros();
+          const o = new Vec2(1, 2);
+          c.sub(o);
+          return eq(a.sub(o).values, [-1, -2])
+            && eq(b.sub(o).sub(o).values, [-2, -4])
+            && eq(c.values, [-1, -2]);
+        },
+
+        // [#4] Mul
+        () => {
+          const a = Vec2.Ones();
+          const b = Vec2.Ones();
+          const c = new Vec2(1, 2);
+          const f = 1.5;
+          c.mul(f);
+          return eq(a.mul(f).values, [1.5, 1.5])
+            && eq(b.mul(f).mul(f).values, [2.25, 2.25])
+            && eq(c.values, [1.5, 3]);
+        },
+
+        // [#5] Div
+        () => {
+          const a = Vec2.Ones();
+          const b = Vec2.Ones();
+          const c = new Vec2(1, 2);
+          const f = 2;
+          c.div(f);
+          return eq(a.div(f).values, [0.5, 0.5])
+            && eq(b.div(f).div(f).values, [0.25, 0.25])
+            && eq(c.values, [0.5, 1.0]);
+        },
+
+        // [#6] Dot
+        () => {
+          const a = Vec2.Zeros();
+          const b = Vec2.Ones();
+          const c = new Vec2(1, 2);
+          return a.dot(b) === 0 && a.dot(c) === 0
+            && b.dot(c) === 3 && c.dot(c) === 5;
+        },
+
+        // [#7] Magnitude
+        () => {
+          const a = Vec2.Zeros();
+          const b = Vec2.Ones();
+          const c = new Vec2(1, 2);
+          return a.magnitude() === 0 && b.magnitude() === Math.sqrt(2)
+            && c.magnitude() === Math.sqrt(5);
+        },
+
+        // [#8] Magnitude Squared
+        () => {
+          const a = Vec2.Zeros();
+          const b = Vec2.Ones();
+          const c = new Vec2(1, 2);
+          return a.magnitude_squared() === 0 && b.magnitude_squared() === 2
+            && c.magnitude_squared() === 5;
+        },
+
+        // [#9] Clone
+        () => {
+          const a = Vec2.Ones();
+          const b = a.clone();
+          b.x = 2;
+          return eq(a.values, [1, 1]) && eq(b.values, [2, 1]);
+        },
+
+        // [#10] Equals
+        () => {
+          const a = new Vec2(1, 2);
+          const b = new Vec2(1, 2);
+          const c = a.clone().div(4).mul(4);
+          return a.equals(b) && b.equals(a) && a.equals(c) && c.equals(a);
+        },
+
+        // [#11] Round
+        () => {
+          const a = new Vec2(1.3456, 2.3456);
+          const b = new Vec2(1.3456, 2.3456);
+          const c = new Vec2(1.3456, 2.3456);
+          const d = new Vec2(1.3456, 2.3456);
+          const e = new Vec2(1.3456, 2.3456);
+          const f = new Vec2(1.3456, 2.3456);
+          return eq(a.round(0).values, new Float32Array([1, 2]))
+            &&  eq(b.round(1).values, new Float32Array([1.3, 2.3]))
+            &&  eq(c.round(2).values, new Float32Array([1.35, 2.35]))
+            &&  eq(d.round(3).values, new Float32Array([1.346, 2.346]))
+            &&  eq(e.round(4).values, new Float32Array([1.3456, 2.3456]))
+            &&  eq(f.round(5).values, new Float32Array([1.34560, 2.34560]));
+        },
+
+        // [#12] Normalize
+        () => {
+          const a = new Vec2(1, 0).normalize();
+          const b = new Vec2(1, 2).normalize().round(2);
+          return eq(a.values, [1, 0])
+            && eq(b.values, new Float32Array([0.45, 0.89]));
+        },
+
+        // [#13] Inverse
+        () => {
+          const a = new Vec2(1, 0).inverse();
+          const b = new Vec2(1, 2).inverse().round(2);
+          return eq(a.values, [1, Number.POSITIVE_INFINITY])
+            && eq(b.values, new Float32Array([1, 0.5]));
+        },
+
+        // [#14] Negate
+        () => {
+          const a = new Vec2(1, 0).negate();
+          const b = new Vec2(1, 2).negate();
+          return eq(a.values, [-1, 0]) && eq(b.values, [-1, -2]);
+        },
+      ]);
+      
+      test("Vec3 operations", [
+        // [#0] toString
+        () => {
+          return (new Vec3(1, 2, 3)) == "[1,2,3]";
+        },
+
+        // [#1] Copy
+        () => {
+          const a = Vec3.Zeros();
+          a.x = 2;
+          const b = Vec3.Copy(a);
+          b.x = 3;
+          b.z = 2;
+          return eq(a.values, [2, 0, 0]) && eq(b.values, [3, 0, 2]);
+        },
+
+        // [#2] Add
+        () => {
+          const a = Vec3.Zeros();
+          const b = Vec3.Zeros();
+          const c = Vec3.Zeros();
+          const o = new Vec3(1, 2, 3);
+          c.add(o);
+          return eq(a.add(o).values, [1, 2, 3])
+            && eq(b.add(o).add(o).values, [2, 4, 6])
+            && eq(c.values, [1, 2, 3]);
+        },
+
+        // [#3] Sub
+        () => {
+          const a = Vec3.Zeros();
+          const b = Vec3.Zeros();
+          const c = Vec3.Zeros();
+          const o = new Vec3(1, 2, 3);
+          c.sub(o);
+          return eq(a.sub(o).values, [-1, -2, -3])
+            && eq(b.sub(o).sub(o).values, [-2, -4, -6])
+            && eq(c.values, [-1, -2, -3]);
+        },
+
+        // [#4] Mul
+        () => {
+          const a = Vec3.Ones();
+          const b = Vec3.Ones();
+          const c = new Vec3(1, 2, 3);
+          const f = 1.5;
+          c.mul(f);
+          return eq(a.mul(f).values, [1.5, 1.5, 1.5])
+            && eq(b.mul(f).mul(f).values, [2.25, 2.25, 2.25])
+            && eq(c.values, [1.5, 3, 4.5]);
+        },
+
+        // [#5] Div
+        () => {
+          const a = Vec3.Ones();
+          const b = Vec3.Ones();
+          const c = new Vec3(1, 2, 3);
+          const f = 2;
+          c.div(f);
+          return eq(a.div(f).values, [0.5, 0.5, 0.5])
+            && eq(b.div(f).div(f).values, [0.25, 0.25, 0.25])
+            && eq(c.values, [0.5, 1.0, 1.5]);
+        },
+
+        // [#6] Dot
+        () => {
+          const a = Vec3.Zeros();
+          const b = Vec3.Ones();
+          const c = new Vec3(1, 2, 3);
+          return a.dot(b) === 0 && a.dot(c) === 0
+            && b.dot(c) === 6 && c.dot(c) === 14;
+        },
+
+        // [#7] Magnitude
+        () => {
+          const a = Vec3.Zeros();
+          const b = Vec3.Ones();
+          const c = new Vec3(1, 2, 3);
+          return a.magnitude() === 0 && b.magnitude() === Math.sqrt(3)
+            && c.magnitude() === Math.sqrt(14);
+        },
+
+        // [#8] Magnitude Squared
+        () => {
+          const a = Vec3.Zeros();
+          const b = Vec3.Ones();
+          const c = new Vec3(1, 2, 3);
+          return a.magnitude_squared() === 0 && b.magnitude_squared() === 3
+            && c.magnitude_squared() === 14;
+        },
+
+        // [#9] Clone
+        () => {
+          const a = Vec3.Ones();
+          const b = a.clone();
+          b.x = 2;
+          return eq(a.values, [1, 1, 1]) && eq(b.values, [2, 1, 1]);
+        },
+
+        // [#10] Equals
+        () => {
+          const a = new Vec3(1, 2, 3);
+          const b = new Vec3(1, 2, 3);
+          const c = a.clone().div(4).mul(4);
+          return a.equals(b) && b.equals(a) && a.equals(c) && c.equals(a);
+        },
+
+        // [#11] Round
+        () => {
+          const a = new Vec3(1.3456, 2.3456, 3.3456);
+          const b = new Vec3(1.3456, 2.3456, 3.3456);
+          const c = new Vec3(1.3456, 2.3456, 3.3456);
+          const d = new Vec3(1.3456, 2.3456, 3.3456);
+          const e = new Vec3(1.3456, 2.3456, 3.3456);
+          const f = new Vec3(1.3456, 2.3456, 3.3456);
+          return eq(a.round(0).values, new Float32Array([1, 2, 3]))
+            &&  eq(b.round(1).values, new Float32Array([1.3, 2.3, 3.3]))
+            &&  eq(c.round(2).values, new Float32Array([1.35, 2.35, 3.35]))
+            &&  eq(d.round(3).values, new Float32Array([1.346, 2.346, 3.346]))
+            &&  eq(e.round(4).values, new Float32Array([1.3456, 2.3456, 3.3456]))
+            &&  eq(f.round(5).values, new Float32Array([1.34560, 2.34560, 3.345600]));
+        },
+
+        // [#12] Normalize
+        () => {
+          const a = new Vec3(1, 0, 0).normalize();
+          const b = new Vec3(1, 2, 3).normalize().round(2);
+          return eq(a.values, [1, 0, 0])
+            && eq(b.values, new Float32Array([0.27, 0.53, 0.80]));
+        },
+
+        // [#13] Inverse
+        () => {
+          const a = new Vec3(1, 0, 0).inverse();
+          const b = new Vec3(1, 2, 3).inverse().round(2);
+          return eq(a.values, [1, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY])
+            && eq(b.values, new Float32Array([1, 0.5, 0.33]));
+        },
+
+        // [#14] Negate
+        () => {
+          const a = new Vec3(1, 1, 0).negate();
+          const b = new Vec3(1, 2, 3).negate();
+          return eq(a.values, [-1, -1, 0]) && eq(b.values, [-1, -2, -3]);
+        },
+      ]);
+
       test("Vec4 operations", [
-        // toString
+        // [#0] toString
         () => {
           return (new Vec4(1, 2, 3, 4)) == "[1,2,3,4]";
         },
 
-        // Copy
+        // [#1] Copy
         () => {
           const a = Vec4.Zeros();
           a.x = 2;
@@ -101,7 +490,7 @@
           return eq(a.values, [2, 0, 0, 0]) && eq(b.values, [3, 0, 0, 2]);
         },
 
-        // Add
+        // [#2] Add
         () => {
           const a = Vec4.Zeros();
           const b = Vec4.Zeros();
@@ -113,7 +502,7 @@
             && eq(c.values, [1, 2, 3, 4]);
         },
 
-        // Sub
+        // [#3] Sub
         () => {
           const a = Vec4.Zeros();
           const b = Vec4.Zeros();
@@ -125,7 +514,7 @@
             && eq(c.values, [-1, -2, -3, -4]);
         },
 
-        // Mul
+        // [#4] Mul
         () => {
           const a = Vec4.Ones();
           const b = Vec4.Ones();
@@ -137,7 +526,19 @@
             && eq(c.values, [1.5, 3, 4.5, 6]);
         },
 
-        // Dot
+        // [#5] Div
+        () => {
+          const a = Vec4.Ones();
+          const b = Vec4.Ones();
+          const c = new Vec4(1, 2, 3, 4);
+          const f = 2;
+          c.div(f);
+          return eq(a.div(f).values, [0.5, 0.5, 0.5, 0.5])
+            && eq(b.div(f).div(f).values, [0.25, 0.25, 0.25, 0.25])
+            && eq(c.values, [0.5, 1.0, 1.5, 2.0]);
+        },
+
+        // [#6] Dot
         () => {
           const a = Vec4.Zeros();
           const b = Vec4.Ones();
@@ -146,14 +547,101 @@
             && b.dot(c) === 10 && c.dot(c) === 30;
         },
 
-        // Magnitude
+        // [#7] Magnitude
         () => {
-          
+          const a = Vec4.Zeros();
+          const b = Vec4.Ones();
+          const c = new Vec4(1, 2, 3, 4);
+          return a.magnitude() === 0 && b.magnitude() === 2
+            && c.magnitude() === Math.sqrt(30);
         },
 
-        // Magnitude Squared
+        // [#8] Magnitude Squared
         () => {
-          
+          const a = Vec4.Zeros();
+          const b = Vec4.Ones();
+          const c = new Vec4(1, 2, 3, 4);
+          return a.magnitude_squared() === 0 && b.magnitude_squared() === 4
+            && c.magnitude_squared() === 30;
+        },
+
+        // [#9] Clone
+        () => {
+          const a = Vec4.Ones();
+          const b = a.clone();
+          b.x = 2;
+          return eq(a.values, [1, 1, 1, 1]) && eq(b.values, [2, 1, 1, 1]);
+        },
+
+        // [#10] Equals
+        () => {
+          const a = new Vec4(1, 2, 3, 4);
+          const b = new Vec4(1, 2, 3, 4);
+          const c = a.clone().div(4).mul(4);
+          return a.equals(b) && b.equals(a) && a.equals(c) && c.equals(a);
+        },
+
+        // [#11] Round
+        () => {
+          const a = new Vec4(1.3456, 2.3456, 3.3456, 4.3456);
+          const b = new Vec4(1.3456, 2.3456, 3.3456, 4.3456);
+          const c = new Vec4(1.3456, 2.3456, 3.3456, 4.3456);
+          const d = new Vec4(1.3456, 2.3456, 3.3456, 4.3456);
+          const e = new Vec4(1.3456, 2.3456, 3.3456, 4.3456);
+          const f = new Vec4(1.3456, 2.3456, 3.3456, 4.3456);
+          return eq(a.round(0).values, new Float32Array([1, 2, 3, 4]))
+            &&  eq(b.round(1).values, new Float32Array([1.3, 2.3, 3.3, 4.3]))
+            &&  eq(c.round(2).values, new Float32Array([1.35, 2.35, 3.35, 4.35]))
+            &&  eq(d.round(3).values, new Float32Array([1.346, 2.346, 3.346, 4.346]))
+            &&  eq(e.round(4).values, new Float32Array([1.3456, 2.3456, 3.3456, 4.3456]))
+            &&  eq(f.round(5).values, new Float32Array([1.34560, 2.34560, 3.34560, 4.34560]));
+        },
+
+        // [#12] Normalize
+        () => {
+          const a = new Vec4(1, 0, 0, 0).normalize();
+          const b = new Vec4(1, 2, 3, 4).normalize().round(2);
+          return eq(a.values, [1, 0, 0, 0])
+            && eq(b.values, new Float32Array([0.18, 0.37, 0.55, 0.73]));
+        },
+
+        // [#13] Inverse
+        () => {
+          const a = new Vec4(1, 1, 0, 0).inverse();
+          const b = new Vec4(1, 2, 3, 4).inverse().round(2);
+          return eq(a.values, [1, 1, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY])
+            && eq(b.values, new Float32Array([1, 0.5, 0.33, 0.25]));
+        },
+
+        // [#14] Negate
+        () => {
+          const a = new Vec4(1, 1, 0, 0).negate();
+          const b = new Vec4(1, 2, 3, 4).negate();
+          return eq(a.values, [-1, -1, 0, 0]) && eq(b.values, [-1, -2, -3, -4]);
+        },
+      ]);
+
+      test("Special operations", [
+        // [#0] Cross
+        () => {
+          const a = new Vec3(2, 3, 4);
+          const b = new Vec3(5, 6, 7);
+          const c = new Vec3(0, 1, 0);
+          const d = new Vec3(1, 0, 0);
+          return eq(a.cross(b).values, [-3, 6, -3]) && eq(b.cross(a).values, [3, -6, 3])
+            && eq(c.cross(d).values, [0, 0, -1]) && eq(d.cross(c).values, [0, 0, 1]);
+        },
+
+        // [#1] Conversion: Vec4 -> Vec3, Vec2
+        () => {
+          const a = new Vec4(1, 2, 3, 4);
+          return eq(a.toVec3().values, [1, 2, 3]) && eq(a.toVec2().values, [1, 2]);
+        },
+
+        // [#2] Conversion: Vec3 -> Vec2
+        () => {
+          const a = new Vec3(1, 2, 3);
+          return eq(a.toVec2().values, [1, 2]);
         }
       ]);
     </script>
