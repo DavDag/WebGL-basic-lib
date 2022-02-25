@@ -56,28 +56,6 @@ export class Mat4 extends Mat {
   }
 
   /**
-   * Retrieve an element from the Mat4.
-   *
-   * @param {number} row index of the row
-   * @param {number} col index of the column
-   *
-   * @return {number} the number in position [row][col]
-   */
-  get(row, col) {
-    return this.values[row * 4 + col];
-  }
-
-  /**
-   * Update an element from the Mat4.
-   *
-   * @param {number} row index of the row
-   * @param {number} col index of the column
-   */
-  set(row, col, value) {
-    this.values[row * 4 + col] = value;
-  }
-
-  /**
    * Retrieve a row from the Mat4 as a Vec4.
    *
    * @param {number} index the index of the row
@@ -113,7 +91,39 @@ export class Mat4 extends Mat {
    *
    * @return {Mat4} this
    */
-  multiply(mat) {
+  apply(mat) {
+    const v00 = this.values[ 0];
+    const v01 = this.values[ 1];
+    const v02 = this.values[ 2];
+    const v03 = this.values[ 3];
+    
+    const v10 = this.values[ 4];
+    const v11 = this.values[ 5];
+    const v12 = this.values[ 6];
+    const v13 = this.values[ 7];
+    
+    const v20 = this.values[ 8];
+    const v21 = this.values[ 9];
+    const v22 = this.values[10];
+    const v23 = this.values[11];
+    
+    const v30 = this.values[12];
+    const v31 = this.values[13];
+    const v32 = this.values[14];
+    const v33 = this.values[15];
+
+    for (let i = 0; i < 4; ++i) {
+      const mat0 = mat.values[ 0 + i];
+      const mat1 = mat.values[ 4 + i];
+      const mat2 = mat.values[ 8 + i];
+      const mat3 = mat.values[12 + i];
+      
+      this.values[ 0 + i] = mat0 * v00 + mat1 * v01 + mat2 * v02 + mat3 * v03;
+      this.values[ 4 + i] = mat0 * v10 + mat1 * v11 + mat2 * v12 + mat3 * v13;
+      this.values[ 8 + i] = mat0 * v20 + mat1 * v21 + mat2 * v22 + mat3 * v23;
+      this.values[12 + i] = mat0 * v30 + mat1 * v31 + mat2 * v32 + mat3 * v33;
+    }
+    
     return this;
   }
 
@@ -126,6 +136,22 @@ export class Mat4 extends Mat {
    * @return {Mat4} this
    */
   translate(vec) {
+    this.values[ 3] += this.values[ 0] * vec.x
+                     + this.values[ 1] * vec.y
+                     + this.values[ 2] * vec.z;
+    
+    this.values[ 7] += this.values[ 4] * vec.x
+                     + this.values[ 5] * vec.y
+                     + this.values[ 6] * vec.z;
+    
+    this.values[11] += this.values[ 8] * vec.x
+                     + this.values[ 9] * vec.y
+                     + this.values[10] * vec.z;
+    
+    this.values[15] += this.values[12] * vec.x
+                     + this.values[13] * vec.y
+                     + this.values[14] * vec.z;
+    
     return this;
   }
 
@@ -138,6 +164,22 @@ export class Mat4 extends Mat {
    * @return {Mat4} this
    */
   scale(vec) {
+    this.values[ 0] *= vec.x;
+    this.values[ 1] *= vec.y;
+    this.values[ 2] *= vec.z;
+    
+    this.values[ 4] *= vec.x;
+    this.values[ 5] *= vec.y;
+    this.values[ 6] *= vec.z;
+    
+    this.values[ 8] *= vec.x;
+    this.values[ 9] *= vec.y;
+    this.values[10] *= vec.z;
+    
+    this.values[12] *= vec.x;
+    this.values[13] *= vec.y;
+    this.values[14] *= vec.z;
+    
     return this;
   }
 
@@ -145,12 +187,58 @@ export class Mat4 extends Mat {
    * Apply the rotation to the Mat4.
    * Operations can be concatenated.
    *
-   * @param {number} ang the angle to rotate
-   * @param {Vec3} vec the axis to rotate around
+   * @param {number} ang the angle to rotate (in radians)
+   * @param {Vec3} vec the NORMALIZED axis to rotate around
    *
    * @return {Mat4} this
    */
   rotate(ang, vec) {
+    const s = Math.sin(ang);
+    const c = Math.cos(ang);
+    const t = 1 - c;
+
+    const v00 = this.values[ 0];
+    const v01 = this.values[ 1];
+    const v02 = this.values[ 2];
+    
+    const v10 = this.values[ 4];
+    const v11 = this.values[ 5];
+    const v12 = this.values[ 6];
+
+    const v20 = this.values[ 8];
+    const v21 = this.values[ 9];
+    const v22 = this.values[10];
+    
+    const v30 = this.values[12];
+    const v31 = this.values[13];
+    const v32 = this.values[14];
+
+    const r00 = vec.x * vec.x * t + c;
+    const r01 = vec.y * vec.x * t + vec.z * s;
+    const r02 = vec.z * vec.x * t - vec.y * s;
+    const r10 = vec.x * vec.y * t - vec.z * s;
+    const r11 = vec.y * vec.y * t + c;
+    const r12 = vec.z * vec.y * t + vec.x * s;
+    const r20 = vec.x * vec.z * t + vec.y * s;
+    const r21 = vec.y * vec.z * t - vec.x * s;
+    const r22 = vec.z * vec.z * t + c;
+
+    this.values[ 0] = v00 * r00 + v01 * r01 + v02 * r02;
+    this.values[ 1] = v00 * r10 + v01 * r11 + v02 * r12;
+    this.values[ 2] = v00 * r20 + v01 * r21 + v02 * r22;
+    
+    this.values[ 4] = v10 * r00 + v11 * r01 + v12 * r02;
+    this.values[ 5] = v10 * r10 + v11 * r11 + v12 * r12;
+    this.values[ 6] = v10 * r20 + v11 * r21 + v12 * r22;
+    
+    this.values[ 8] = v20 * r00 + v21 * r01 + v22 * r02;
+    this.values[ 9] = v20 * r10 + v21 * r11 + v22 * r12;
+    this.values[10] = v20 * r20 + v21 * r21 + v22 * r22;
+    
+    this.values[12] = v30 * r00 + v31 * r01 + v32 * r02;
+    this.values[13] = v30 * r10 + v31 * r11 + v32 * r12;
+    this.values[14] = v30 * r20 + v31 * r21 + v32 * r22;
+
     return this;
   }
 
@@ -199,7 +287,9 @@ export class Mat4 extends Mat {
    * Compute the inverse of the Mat4.
    * Operations can be concatenated.
    *
-   * @return {Mat} this
+   * @throws Error when det() is 0
+   *
+   * @return {Mat4} this
    */
   inverse() {
     const v00 = this.values[ 0];
@@ -260,5 +350,46 @@ export class Mat4 extends Mat {
     this.values[15] = (v02 * tmp3  - v12 * tmp1  + v22 * tmp0 ) * det;
 
     return this;
+  }
+  
+  /**
+   * Create the lookAt matrix.
+   *
+   * @param {Vec3} from the source point
+   * @param {Vec3} to the target point
+   * @param {Vec3} up the up direction
+   *
+   * @return {Mat} the newly created Mat4
+   */
+  static lookAt(from, to, up) {
+    if (from.equals(to)) return Mat4.identity();
+
+    const z = from.clone().sub(to).normalize();
+    const x = up.clone().cross(z).normalize();
+    const y = z.clone().cross(x).normalize();
+    
+    const arr = new Array(16);
+
+    arr[ 0] = x.x;
+    arr[ 1] = x.y;
+    arr[ 2] = x.z;
+    arr[ 3] = -x.dot(from);
+    
+    arr[ 4] = y.x;
+    arr[ 5] = y.y;
+    arr[ 6] = y.z;
+    arr[ 7] = -y.dot(from);
+
+    arr[ 8] = z.x;
+    arr[ 9] = z.y;
+    arr[10] = z.z;
+    arr[11] = -z.dot(from);
+    
+    arr[12] = 0;
+    arr[13] = 0;
+    arr[14] = 0;
+    arr[15] = 1;
+    
+    return Mat4.FromArray(arr);
   }
 }

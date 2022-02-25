@@ -42,8 +42,8 @@ export class Vec {
    * 
    * @return {string} string representation
    */
-  toString() {
-    return "[" + this.values.join(",") + "]";
+  toString(decimal = 20) {
+    return "[" + [...this.values].map((v) => v.toFixed(decimal)).join(",") + "]";
   }
 
   /**

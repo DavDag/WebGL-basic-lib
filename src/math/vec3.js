@@ -75,21 +75,21 @@ export class Vec3 extends Vec {
 
   /**
    * Compute the cross product with another vector.
+   * Operations can be concatenated.
    *
    * @param {Vec3} vec the vector to multiply
    *
-   * @return {Vec3} the result of the computation
+   * @return {Vec3} this
    */
   cross(vec) {
-    return new Vec3(
-      // a.y * b.z - a.z * b.y
-      (this.values[1] * vec.values[2]) - (this.values[2] * vec.values[1]),
-      
-      // a.z * b.x - a.x * b.z
-      (this.values[2] * vec.values[0]) - (this.values[0] * vec.values[2]),
+    const v0 = this.values[0];
+    const v1 = this.values[1];
+    const v2 = this.values[2];
 
-      // a.x * b.y - a.y * b.x
-      (this.values[0] * vec.values[1]) - (this.values[1] * vec.values[0])
-    );
+    this.values[0] = (v1 * vec.z) - (v2 * vec.y);
+    this.values[1] = (v2 * vec.x) - (v0 * vec.z);
+    this.values[2] = (v0 * vec.y) - (v1 * vec.x);
+    
+    return this;
   }
 }

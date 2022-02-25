@@ -193,7 +193,7 @@
       test("Vec2 operations", [
         // [#0] toString
         () => {
-          return (new Vec2(1, 2)) == "[1,2]";
+          return (new Vec2(1, 2).toString(0)) == "[1,2]";
         },
 
         // [#1] Add
@@ -330,7 +330,7 @@
       test("Vec3 operations", [
         // [#0] toString
         () => {
-          return (new Vec3(1, 2, 3)) == "[1,2,3]";
+          return (new Vec3(1, 2, 3).toString(0)) == "[1,2,3]";
         },
 
         // [#1] Add
@@ -467,7 +467,7 @@
       test("Vec4 operations", [
         // [#0] toString
         () => {
-          return (new Vec4(1, 2, 3, 4)) == "[1,2,3,4]";
+          return (new Vec4(1, 2, 3, 4).toString(0)) == "[1,2,3,4]";
         },
 
         // [#1] Add
@@ -608,8 +608,10 @@
           const b = new Vec3(5, 6, 7);
           const c = new Vec3(0, 1, 0);
           const d = new Vec3(1, 0, 0);
-          return eq(a.cross(b).values, [-3, 6, -3]) && eq(b.cross(a).values, [3, -6, 3])
-            && eq(c.cross(d).values, [0, 0, -1]) && eq(d.cross(c).values, [0, 0, 1]);
+          return eq(a.clone().cross(b).values, [-3, 6, -3])
+            && eq(b.clone().cross(a).values, [3, -6, 3])
+            && eq(c.clone().cross(d).values, [0, 0, -1])
+            && eq(d.clone().cross(c).values, [0, 0, 1]);
         },
 
         // [#1] Conversion: Vec4 -> Vec3, Vec2

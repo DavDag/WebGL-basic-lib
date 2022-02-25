@@ -48,13 +48,35 @@ export class Mat {
   }
 
   /**
+   * Retrieve an element from the Mat2.
+   *
+   * @param {number} row index of the row
+   * @param {number} col index of the column
+   *
+   * @return {number} the number in position [row][col]
+   */
+  get(row, col) {
+    return this.values[row * this.constructor.side() + col];
+  }
+
+  /**
+   * Update an element from the Mat2.
+   *
+   * @param {number} row index of the row
+   * @param {number} col index of the column
+   */
+  set(row, col, value) {
+    this.values[row * this.constructor.side() + col] = value;
+  }
+
+  /**
    * Getter to retrieve a string representing the Mat instance.
    * 
    * @return {string} string representation
    */
-  toString() {
+  toString(decimal = 20) {
     const rows = new Array(this.constructor.side()).fill(0)
-      .map((el, ind) => "\t"+ this.row(ind).toString());
+      .map((el, ind) => "\t" + this.row(ind).toString(decimal));
     return "[\n" + rows.join(",\n") + "\n]";
   }
 
