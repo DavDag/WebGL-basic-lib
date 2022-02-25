@@ -26,7 +26,7 @@ export class Vec {
   }
 
   /**
-   * Syntactic-sugar for a Vec initialization with equal values.
+   * Syntactic-sugar for a Vec initialization from array.
    * Should be implemented by specialized classes.
    * 
    * @param {array of number} arr the array to copy
@@ -38,7 +38,7 @@ export class Vec {
   }
 
   /**
-   * Getter to retrieve a string representing the Vec4 instance.
+   * Getter to retrieve a string representing the Vec instance.
    * 
    * @return {string} string representation
    */
@@ -202,7 +202,7 @@ export class Vec {
    * @return {Vec} the newly created vector
    */
   clone() {
-    return this.constructor.Copy(this);
+    return this.constructor.FromArray(this.values);
   }
 
   /**
@@ -214,17 +214,6 @@ export class Vec {
    */
   static All(v) {
     return this.FromArray(new Array(this.count()).fill(v));
-  }
-
-  /**
-   * Syntactic-sugar for a Vec initialization from another Vec.
-   * 
-   * @param {Vec} vec the vector to copy
-   * 
-   * @return {Vec} the newly created vector
-   */
-  static Copy(vec) {
-    return this.FromArray(vec.values);
   }
 
   /**
