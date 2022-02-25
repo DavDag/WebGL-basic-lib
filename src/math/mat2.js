@@ -104,10 +104,9 @@ export class Mat2 extends Mat {
   scale(vec) {
     this.values[0] *= vec.x;
     this.values[1] *= vec.y;
-    
     this.values[2] *= vec.x;
     this.values[3] *= vec.y;
-
+    
     return this;
   }
 
@@ -159,7 +158,7 @@ export class Mat2 extends Mat {
     const v10 = this.values[2];
     const v11 = this.values[3];
     
-    const det = v00 * v11 - v01 * v10;
+    var det = v00 * v11 - v01 * v10;
 
     if (det === 0) throw new Error("Unable to inverse matrix if det is zero");
     

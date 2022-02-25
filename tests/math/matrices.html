@@ -169,6 +169,76 @@
         },
       ]);
 
+      test("Mat2 accessors", [
+        // [#0] Get
+        () => {
+          const a = new Mat2(0,  1,  2,  3);
+          return a.get(0, 0) === 0 && a.get(0, 1) === 1
+            && a.get(1, 0) === 2 && a.get(1, 1) === 3;
+        },
+        
+        // [#1] Set
+        () => {
+          const a = new Mat2(0,  1,  2,  3);
+          a.set(0, 0, -1);
+          a.set(1, 1, -1);
+          return eq(a.values, [-1, 1, 2, -1]);
+        },
+
+        // [#2] Row
+        () => {
+          const a = new Mat2(0,  1,  2,  3);
+          return eq(a.row(0).values, [0, 1]) && eq(a.row(1).values, [2, 3]);
+        },
+
+        // [#3] Col
+        () => {
+          const a = new Mat2(0,  1,  2,  3);
+          return eq(a.col(0).values, [0, 2]) && eq(a.col(1).values, [1, 3]);
+        }
+      ]);
+
+      test("Mat3 accessors", [
+        // [#0] Get
+        () => {
+          const a = new Mat3(0, 1, 2,
+                             3, 4, 5,
+                             6, 7, 8);
+          return a.get(0, 0) === 0 && a.get(0, 1) === 1 && a.get(1, 0) === 3
+            && a.get(1, 1) === 4 && a.get(1, 2) === 5 && a.get(2, 1) === 7
+            && a.get(2, 2) === 8;
+        },
+        
+        // [#1] Set
+        () => {
+          const a = new Mat3(0, 1, 2,
+                             3, 4, 5,
+                             6, 7, 8);
+          a.set(0, 0, -1);
+          a.set(1, 1, -1);
+          a.set(2, 2, -1);
+          return eq(a.values, [-1, 1, 2, 3, -1, 5, 6, 7, -1]);
+        },
+
+        // [#2] Row
+        () => {
+          const a = new Mat3(0, 1, 2,
+                             3, 4, 5,
+                             6, 7, 8);
+          return eq(a.row(0).values, [0, 1, 2]) && eq(a.row(1).values, [3, 4, 5])
+            && eq(a.row(2).values, [6, 7, 8]);
+        },
+
+        // [#3] Col
+        () => {
+          const a = new Mat3(0, 1, 2,
+                             3, 4, 5,
+                             6, 7, 8);
+          return eq(a.col(0).values, [0, 3, 6]) && eq(a.col(1).values, [1, 4, 7])
+            && eq(a.col(2).values, [2, 5, 8]);
+        }
+      ]);
+
       test("Mat4 accessors", [
         // [#0] Get
         () => {
@@ -213,6 +283,123 @@
                              12, 13, 14, 15);
           return eq(a.col(0).values, [0, 4, 8, 12]) && eq(a.col(1).values, [1, 5, 9, 13])
             && eq(a.col(2).values, [2, 6, 10, 14]) && eq(a.col(3).values, [3, 7, 11, 15]);
+        }
+      ]);
+
+      test("Mat2 operations", [
+        // [#0] Det
+        () => {
+          const a = new Mat2(0,  1,  2,  3);
+          return a.det() === -2;
+        },
+        
+        // [#1] Transpose
+        () => {
+          const a = new Mat2(0,  1,  2,  3);
+          a.transpose();
+          return eq(a.values, [0, 2, 1, 3]);
+        },
+        
+        // [#2] Inverse
+        () => {
+          const a = new Mat2(0,  1,  2,  3);
+          a.inverse();
+          return eq(a.values, [-1.5, 0.5, 1, 0]);
+        },
+        
+        // [#3] Translate
+        () => {
+          // Mat2 does not implement translate
+          return true;
+        },
+        
+        // [#4] Scale
+        () => {
+          const a = new Mat2(0,  1,  2,  3);
+          a.scale(new Vec2(2, 3));
+          return eq(a.values, [0, 3, 4, 9]);
+        },
+        
+        // [#5] Rotate
+        () => {
+          const a = new Mat2(0,  1,  2,  3);
+          a.rotate(toRad(90)).round(2);
+          return eq(a.values, new Float32Array([1, 0, 3, -2]));
+        },
+        
+        // [#6] Multiply
+        () => {
+          const a = new Mat2(0,  1,  2,  3);
+          const b = new Mat2(0,  1,  2,  3);
+          a.apply(b);
+          return eq(a.values, [2, 3, 6, 11]);
+        }
+      ]);
+
+      test("Mat3 operations", [
+        // [#0] Det
+        () => {
+          const a = new Mat3(1, 3, 2,
+                             1, 4, 3,
+                             2, 2, 4);
+          return a.det() === 4;
+        },
+        
+        // [#1] Transpose
+        () => {
+          const a = new Mat3(0, 1, 2,
+                             3, 4, 5,
+                             6, 7, 8);
+          a.transpose();
+          return eq(a.values, [0, 3, 6, 1, 4, 7, 2, 5, 8]);
+        },
+        
+        // [#2] Inverse
+        () => {
+          const a = new Mat3(1, 1, 2,
+                             3, 4, 2,
+                             2, 3, 4);
+          a.inverse().round(2);
+          return eq(a.values, [2.5, 0.5, -1.5, -2, 0, 1, 0.25, -0.25, 0.25]);
+        },
+        
+        // [#3] Translate
+        () => {
+          const a = new Mat3(0, 1, 2,
+                             3, 4, 5,
+                             6, 7, 8);
+          a.translate(Vec2.Ones());
+          return eq(a.values, [0, 1, 3, 3, 4, 12, 6, 7, 21]);
+        },
+        
+        // [#4] Scale
+        () => {
+          const a = new Mat3(0, 1, 2,
+                             3, 4, 5,
+                             6, 7, 8);
+          a.scale(new Vec3(2, 3, 4));
+          return eq(a.values, [0, 3, 2, 6, 12, 5, 12, 21, 8]);
+        },
+        
+        // [#5] Rotate
+        () => {
+          const a = new Mat3(0, 1, 2,
+                             3, 4, 5,
+                             6, 7, 8);
+          a.rotate(toRad(90)).round(2);
+          return eq(a.values, new Float32Array([1, 0, 2, 4, -3, 5, 7, -6, 8]));
+        },
+        
+        // [#6] Multiply
+        () => {
+          const a = new Mat3(0, 1, 2,
+                             3, 4, 5,
+                             6, 7, 8);
+          const b = new Mat3(0, 1, 2,
+                             3, 4, 5,
+                             6, 7, 8);
+          a.apply(b);
+          return eq(a.values, [15, 18, 21, 42, 54, 66, 69, 90, 111]);
         }
       ]);
 

@@ -333,20 +333,20 @@ export class Mat4 extends Mat {
     det = 1.0 / det;
 
     this.values[ 0] = (v11 * tmp11 - v21 * tmp10 + v31 * tmp9 ) * det;
-    this.values[ 4] = (v20 * tmp10 - v10 * tmp11 - v30 * tmp9 ) * det;
-    this.values[ 8] = (v13 * tmp5  - v23 * tmp4  + v33 * tmp3 ) * det;
-    this.values[12] = (v22 * tmp4  - v12 * tmp5  - v32 * tmp3 ) * det;
     this.values[ 1] = (v21 * tmp8  - v01 * tmp11 - v31 * tmp7 ) * det;
-    this.values[ 5] = (v00 * tmp11 - v20 * tmp8  + v30 * tmp7 ) * det;
-    this.values[ 9] = (v23 * tmp2  - v03 * tmp5  - v33 * tmp1 ) * det;
-    this.values[13] = (v02 * tmp5  - v22 * tmp2  + v32 * tmp1 ) * det;
     this.values[ 2] = (v01 * tmp10 - v11 * tmp8  + v31 * tmp6 ) * det;
-    this.values[ 6] = (v10 * tmp8  - v00 * tmp10 - v30 * tmp6 ) * det;
-    this.values[10] = (v03 * tmp4  - v13 * tmp2  + v33 * tmp0 ) * det;
-    this.values[14] = (v12 * tmp2  - v02 * tmp4  - v32 * tmp0 ) * det;
     this.values[ 3] = (v11 * tmp7  - v01 * tmp9  - v21 * tmp6 ) * det;
+    this.values[ 4] = (v20 * tmp10 - v10 * tmp11 - v30 * tmp9 ) * det;
+    this.values[ 5] = (v00 * tmp11 - v20 * tmp8  + v30 * tmp7 ) * det;
+    this.values[ 6] = (v10 * tmp8  - v00 * tmp10 - v30 * tmp6 ) * det;
     this.values[ 7] = (v00 * tmp9  - v10 * tmp7  + v20 * tmp6 ) * det;
+    this.values[ 8] = (v13 * tmp5  - v23 * tmp4  + v33 * tmp3 ) * det;
+    this.values[ 9] = (v23 * tmp2  - v03 * tmp5  - v33 * tmp1 ) * det;
+    this.values[10] = (v03 * tmp4  - v13 * tmp2  + v33 * tmp0 ) * det;
     this.values[11] = (v13 * tmp1  - v03 * tmp3  - v23 * tmp0 ) * det;
+    this.values[12] = (v22 * tmp4  - v12 * tmp5  - v32 * tmp3 ) * det;
+    this.values[13] = (v02 * tmp5  - v22 * tmp2  + v32 * tmp1 ) * det;
+    this.values[14] = (v12 * tmp2  - v02 * tmp4  - v32 * tmp0 ) * det;
     this.values[15] = (v02 * tmp3  - v12 * tmp1  + v22 * tmp0 ) * det;
 
     return this;
