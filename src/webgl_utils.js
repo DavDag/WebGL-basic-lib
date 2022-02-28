@@ -14,7 +14,7 @@ export function RetrieveWebGLContext(elementId) {
   const canvas = document.getElementById(elementId);
 
   // Check for errors
-  if (canvas == null) reject("Invalid element id");
+  if (canvas == null) throw new Error("Invalid element id");
 
   // Initialize the GL context
   const gl = canvas.getContext("webgl");
