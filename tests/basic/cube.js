@@ -1,3 +1,5 @@
+/* @author: Davide Risaliti davdag24@gmail.com */
+
 import * as lib from "/src/all.js";
 
 const V_SHADER_SRC =
