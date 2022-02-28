@@ -10,6 +10,7 @@ uniform mat4 uProjectionMatrix;
 void main(void) {
   vColor = aColor;
   gl_Position = uProjectionMatrix * uModelViewMatrix * aPosition;
+  gl_PointSize = 10.0;
 }
 `;
 
@@ -22,27 +23,56 @@ void main(void) {
 }
 `;
 
-function quad(gl) {
+function cube(gl) {
   const verteces = new Float32Array([
-    +1, +1, -1,   1, 0, 0,
-    -1, +1, -1,   0, 1, 0,
-    +1, -1, -1,   0, 0, 1,
-    -1, -1, -1,   1, 1, 1,
-    -1, -1, +1,   1, 0, 0,
-    -1, +1, -1,   0, 1, 0,
-    -1, +1, +1,   0, 0, 1,
-    +1, +1, -1,   1, 1, 1,
-    +1, +1, +1,   1, 0, 0,
-    +1, -1, -1,   0, 1, 0,
-    +1, -1, +1,   0, 0, 1,
-    -1, -1, +1,   1, 1, 1,
-    +1, +1, +1,   1, 0, 0,
-    -1, +1, +1,   0, 1, 0
+    // front face
+     1.0,  1.0,  1.0,    1, 0, 0,
+    -1.0,  1.0,  1.0,    1, 0, 0,
+    -1.0, -1.0,  1.0,    1, 0, 0,
+     1.0, -1.0,  1.0,    1, 0, 0,
+    // back face
+     1.0,  1.0, -1.0,    0, 0, 1,
+    -1.0,  1.0, -1.0,    0, 0, 1,
+    -1.0, -1.0, -1.0,    0, 0, 1,
+     1.0, -1.0, -1.0,    0, 0, 1,
+    // top face
+     1.0,  1.0,  1.0,    1, 0, 1,
+    -1.0,  1.0,  1.0,    1, 0, 1,
+    -1.0,  1.0, -1.0,    1, 0, 1,
+     1.0,  1.0, -1.0,    1, 0, 1,
+    // bot face
+     1.0, -1.0,  1.0,    0, 1, 1,
+    -1.0, -1.0,  1.0,    0, 1, 1,
+    -1.0, -1.0, -1.0,    0, 1, 1,
+     1.0, -1.0, -1.0,    0, 1, 1,
+    // left face
+    -1.0,  1.0,  1.0,    0, 1, 0,
+    -1.0, -1.0,  1.0,    0, 1, 0,
+    -1.0, -1.0, -1.0,    0, 1, 0,
+    -1.0,  1.0, -1.0,    0, 1, 0,
+    // right face
+     1.0,  1.0,  1.0,    1, 1, 0,
+     1.0, -1.0,  1.0,    1, 1, 0,
+     1.0, -1.0, -1.0,    1, 1, 0,
+     1.0,  1.0, -1.0,    1, 1, 0,
   ]);
 
-  const buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  const elements = new Uint8Array([    
+		 0,  1,  2,  0,  2,  3, // face #1
+		 4,  5,  6,  4,  6,  7, // face #2
+		 8,  9, 10,  8, 10, 11, // face #3
+		12, 13, 14, 12, 14, 15, // face #4
+		16, 17, 18, 16, 18, 19, // face #5
+		20, 21, 22, 20, 22, 23  // face #6
+  ]);
+
+  const vertex_buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
   gl.bufferData(gl.ARRAY_BUFFER, verteces, gl.STATIC_DRAW);
+
+  const element_buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, element_buffer);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, elements, gl.STATIC_DRAW);
 
   gl.enableVertexAttribArray(0);
   gl.enableVertexAttribArray(1);
@@ -64,9 +94,6 @@ function quad(gl) {
   const projMat = lib.Mat4.Perspective(lib.toRad(45), 1, 0.1, 100.0).transpose();
   const viewMat = lib.Mat4.Identity().translate(new lib.Vec3(0, 0, -6));
 
-  // const res = projMat.clone().apply(viewMat);
-  // console.log(res.toString(2));
-
   var time = 0;
   const draw = () => {
     time += 1;
@@ -77,7 +104,7 @@ function quad(gl) {
   
     program.use();
 
-    const axe = new lib.Vec3(1, 1, 0).normalize();
+    const axe = new lib.Vec3(Math.cos(time / 50), Math.sin(time / 50), 0).normalize();
     const tmpViewMat = viewMat.clone()
       .rotate(lib.toRad(time), axe)
       .transpose();
@@ -85,16 +112,16 @@ function quad(gl) {
     gl.uniformMatrix4fv(projMatLoc, false, projMat.values);
     gl.uniformMatrix4fv(viewMatLoc, false, tmpViewMat.values);
     
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 14);
+    gl.drawElements(gl.TRIANGLES, elements.length, gl.UNSIGNED_BYTE, 0);
   };
 
-  setInterval(draw, 8);
+  setInterval(draw, 16);
 }
 
 function main() {
   try {
     const gl = lib.RetrieveWebGLContext("main-canvas");
-    quad(gl);
+    cube(gl);
   } catch (e) {
     console.error(e);
   }
