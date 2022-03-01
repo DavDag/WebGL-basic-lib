@@ -15,4 +15,5 @@ export * from "./math/mat2.js";
 export * from "./math/mat3.js";
 export * from "./math/mat4.js";
 
+export * from "./geometry/sphere.js";
 export * from "./geometry/icosahedron.js";

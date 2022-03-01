@@ -1,17 +1,15 @@
 /** @author: Davide Risaliti davdag24@gmail.com */
 
-import {BasicShape} from "./types.js";
+import {BasicShape, TexturedShape} from "./types.js";
+import {Vec2} from "/src/math/vec2.js";
 import {Vec3} from "/src/math/vec3.js";
 
 /**
- * @class BasicShape representing a basic geometry defined by:
- * - verteces array of { 3D-Pos, 2D-TexCoord }
- * - elements array of { indices }
+ * @class Icosahedron representing an Icosahedron.
  */
 export class Icosahedron {
   /**
-   * Creates an instance of an Icosahedron with a user-defined
-   * precision.
+   * Creates a BasicShape of an Icosahedron with a user-defined precision.
    *
    * @param {number} precision the precision to use when
    *                 generating the shape
@@ -19,11 +17,30 @@ export class Icosahedron {
    * @return {BasicShape} the generated icosahedron
    */
   static asBasicShape(precision) {
-    var verteces = [];
+    const { verteces, uvs, elements } = Icosahedron.#buildIcosahedron(precision);
+    return new BasicShape(verteces, elements);
+  }
+  
+  /**
+   * Creates a TexturedShape of an Icosahedron with a user-defined precision.
+   *
+   * @param {number} precision the precision to use when
+   *                 generating the shape
+   *
+   * @return {TexturedShape} the generated icosahedron
+   */
+  static asTexturedShape(precision) {
+    const { verteces, uvs, elements } = Icosahedron.#buildIcosahedron(precision);
+    return new TexturedShape(verteces, uvs, elements);
+  }
+
+  static #buildIcosahedron(precision) {
+    precision = Math.max(0, precision);
+    
+    const verteces = [];
     var elements = [];
-
-    // Create the 12 verteces icosahedron
-
+    var uvs = [];
+    
     const X = 0.525731112119133606;
     const Z = 0.850650808352039932;
     const N = 0.0;
@@ -75,11 +92,9 @@ export class Icosahedron {
       return verteces.length - 1;
     };
 
-    // Refine the triangles
     for (let i = 0; i < precision; ++i) {
       const result = [];
       elements.forEach((face) => {
-        // Refine triangle by replacing it 4 4 triangles
         const a = middle(face.x, face.y);
         const b = middle(face.y, face.z);
         const c = middle(face.z, face.x);
@@ -91,14 +106,8 @@ export class Icosahedron {
       elements = result;
     }
 
-    verteces = verteces.flatMap((vert) => {
-      const u = 0.5 + Math.atan2(vert.x, vert.z) / (2 * Math.PI);
-      const v = 0.5 - Math.asin(vert.y) / Math.PI;
-      return [...vert.values, u, v];
-    }).flat();
+    uvs = verteces.map((v) => v.toUVofSphere());
 
-    elements = elements.map((v) => [...v.values]).flat();
-
-    return new BasicShape(verteces, elements);
+    return { verteces, elements, uvs };
   }
 }

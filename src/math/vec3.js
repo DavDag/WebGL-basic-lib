@@ -92,4 +92,15 @@ export class Vec3 extends Vec {
     
     return this;
   }
+
+  /*
+   * Calculate texture uvs of sphere with Vec3 as point.
+   *
+   * @return {Vec2} the uv coordinates
+   */
+  toUVofSphere() {
+    const u = (Math.atan2(this.values[0], this.values[2]) / Math.PI) / 2 + 0.5;
+    const v = (Math.asin(-this.values[1]) / (Math.PI / 2)) / 2 + 0.5;
+    return new Vec2(u, v);
+  }
 }
