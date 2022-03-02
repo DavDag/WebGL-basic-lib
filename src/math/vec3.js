@@ -99,6 +99,7 @@ export class Vec3 extends Vec {
    * @return {Vec2} the uv coordinates
    */
   toUVofSphere() {
+    this.normalize();
     const u = (Math.atan2(this.values[0], this.values[2]) / Math.PI) / 2 + 0.5;
     const v = (Math.asin(-this.values[1]) / (Math.PI / 2)) / 2 + 0.5;
     return new Vec2(u, v);
