@@ -14,6 +14,7 @@ export class Program {
   constructor(gl) {
     this.#gl = gl;
     this.id = gl.createProgram();
+    this.attrs = [];
   }
 
   /**
@@ -49,11 +50,31 @@ export class Program {
   /**
    * Bind attributes inside the Program. [once]
    *
-   * @param {list of (number, string)} attrs the attributes list
+   * @param {list of (string, number, enum, number, number)} attrs the attributes list
    */
   attributes(attrs) {
-    attrs.forEach(([ind, name]) => {
-      this.#gl.bindAttribLocation(this.id, ind, name);      
+    this.attrs = attrs;
+    attrs.forEach(([name, _, __, ___, ____], ind) => {
+      this.#gl.bindAttribLocation(this.id, ind, name);
+    });
+  }
+
+  /**
+   * Enable all the attributes arrays and initialize their pointers data.
+   */
+  enableAttributes() {
+    this.attrs.forEach(([_, count, type, size, offset], ind) => {
+      this.#gl.enableVertexAttribArray(ind);
+      this.#gl.vertexAttribPointer(ind, count, type, false, size, offset);
+    });
+  }
+
+  /**
+   * Disable all the attributes arrays.
+   */
+  disableAttributes() {
+    this.attrs.forEach((_, ind) => {
+      this.#gl.disableVertexAttribArray(ind);
     });
   }
 
@@ -92,6 +113,13 @@ export class Program {
    */
   uniform1f(id, value) { this.#gl.uniform1f(id, value); }
   uniform1i(id, value) { this.#gl.uniform1i(id, value); }
+  uniform2iv(id, value) { this.#gl.uniform2iv(id, value); }
+  uniform2fv(id, value) { this.#gl.uniform2fv(id, value); }
+  uniform3iv(id, value) { this.#gl.uniform3iv(id, value); }
+  uniform3fv(id, value) { this.#gl.uniform3fv(id, value); }
+  uniform4iv(id, value) { this.#gl.uniform4iv(id, value); }
   uniform4fv(id, value) { this.#gl.uniform4fv(id, value); }
+  uniformMatrix2fv(id, value) { this.#gl.uniformMatrix2fv(id, false, value); }
+  uniformMatrix3fv(id, value) { this.#gl.uniformMatrix3fv(id, false, value); }
   uniformMatrix4fv(id, value) { this.#gl.uniformMatrix4fv(id, false, value); }
 }

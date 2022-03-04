@@ -84,6 +84,20 @@ export class Shape {
   static flattenVecArrays(arrays) {
     return arrays[0].map((_, ind) => arrays.map((a) => [...a[ind].values]).flat()).flat();
   }
+
+  /**
+   * Debug draw points for each vertex.
+   *
+   * Works only when using the DebugShape.
+   */
+  drawPoints(mat, color, size) { }
+
+  /**
+   * Debug draw lines for each segment.
+   *
+   * Works only when using the DebugShape.
+   */
+  drawLines(mat, color) { }
 }
 
 /**

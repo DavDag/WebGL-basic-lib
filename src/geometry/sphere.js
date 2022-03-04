@@ -49,8 +49,8 @@ export class Sphere {
   }
 
   static #buildSphere(precisionx, precisiony) {
-    const num_vert_slices = Math.max(3, precisionx - 1);
-    const num_hori_slices = Math.max(3, precisiony - 1);
+    const num_vert_slices = Math.max(3, precisionx);
+    const num_hori_slices = Math.max(3, precisiony);
     
     const verteces = [];
     const uvs = [];

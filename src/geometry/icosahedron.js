@@ -152,12 +152,12 @@ export class Icosahedron {
 
     // Lines
     lines = LinesFromTriangles(verteces, triangles);
+
+    // Create normals for each vertex
+    normals = verteces.map((v) => v.clone().normalize());
     
     // Create uvs for each vertex
     uvs = verteces.map((v) => v.toUVofSphere());
-
-    // Create normals for each vertex
-    normals = verteces.map((v) => v.clone());
 
     return { verteces, uvs, normals, triangles, lines };
   }
