@@ -17,9 +17,9 @@ export class Mat3 extends Mat {
   constructor(x_r1, y_r1, z_r1,
               x_r2, y_r2, z_r2,
               x_r3, y_r3, z_r3,) {
-    super([x_r1, y_r1, z_r1,
-           x_r2, y_r2, z_r2,
-           x_r3, y_r3, z_r3]);
+    super([x_r1, x_r2, x_r3,
+           y_r1, y_r2, y_r3,
+           z_r1, z_r2, z_r3]);
   }
 
   /**
@@ -43,9 +43,24 @@ export class Mat3 extends Mat {
   /**
    * Syntactic-sugar for a Mat3 initialization with an array.
    *
+   * Column-Major version.
+   *
    * @return {Mat3} the newly created vector
    */
-  static FromArray(arr) {
+  static FromArrayCM(arr) {
+    return new Mat3(arr[0], arr[3], arr[6],
+                    arr[1], arr[4], arr[7],
+                    arr[2], arr[5], arr[8]);
+  }
+
+  /**
+   * Syntactic-sugar for a Mat3 initialization with an array.
+   *
+   * Row-Major version.
+   *
+   * @return {Mat3} the newly created vector
+   */
+  static FromArrayRM(arr) {
     return new Mat3(arr[0], arr[1], arr[2],
                     arr[3], arr[4], arr[5],
                     arr[6], arr[7], arr[8]);
@@ -59,9 +74,9 @@ export class Mat3 extends Mat {
    * @return {Vec3} the selected row
    */
   row(index) {
-    return new Vec3(this.values[index * 3 + 0],
-                    this.values[index * 3 + 1],
-                    this.values[index * 3 + 2]);
+    return new Vec3(this.values[0 + index],
+                    this.values[3 + index],
+                    this.values[6 + index]);
   }
 
   /**
@@ -72,9 +87,9 @@ export class Mat3 extends Mat {
    * @return {Vec3} the selected column
    */
   col(index) {
-    return new Vec3(this.values[0 + index],
-                    this.values[3 + index],
-                    this.values[6 + index]);
+    return new Vec3(this.values[index * 3 + 0],
+                    this.values[index * 3 + 1],
+                    this.values[index * 3 + 2]);
   }
 
   /**
@@ -87,25 +102,25 @@ export class Mat3 extends Mat {
    */
   apply(mat) {
     const v00 = this.values[0];
-    const v01 = this.values[1];
-    const v02 = this.values[2];
+    const v10 = this.values[1];
+    const v20 = this.values[2];
     
-    const v10 = this.values[3];
+    const v01 = this.values[3];
     const v11 = this.values[4];
-    const v12 = this.values[5];
+    const v21 = this.values[5];
 
-    const v20 = this.values[6];
-    const v21 = this.values[7];
+    const v02 = this.values[6];
+    const v12 = this.values[7];
     const v22 = this.values[8];
     
     for (let i = 0; i < 3; ++i) {
-      const mat0 = mat.values[0 + i];
-      const mat1 = mat.values[3 + i];
-      const mat2 = mat.values[6 + i];
+      const mat0 = mat.values[i * 3 + 0];
+      const mat1 = mat.values[i * 3 + 1];
+      const mat2 = mat.values[i * 3 + 2];
     
-      this.values[0 + i] = mat0 * v00 + mat1 * v01 + mat2 * v02;
-      this.values[3 + i] = mat0 * v10 + mat1 * v11 + mat2 * v12;
-      this.values[6 + i] = mat0 * v20 + mat1 * v21 + mat2 * v22;
+      this.values[i * 3 + 0] = mat0 * v00 + mat1 * v01 + mat2 * v02;
+      this.values[i * 3 + 1] = mat0 * v10 + mat1 * v11 + mat2 * v12;
+      this.values[i * 3 + 2] = mat0 * v20 + mat1 * v21 + mat2 * v22;
     }
     
     return this;
@@ -120,9 +135,14 @@ export class Mat3 extends Mat {
    * @return {Mat3} this
    */
   translate(vec) {
-    this.values[2] += vec.x * this.values[0] + vec.y * this.values[1];
-    this.values[5] += vec.x * this.values[3] + vec.y * this.values[4];
-    this.values[8] += vec.x * this.values[6] + vec.y * this.values[7];
+    this.values[6] += vec.x * this.values[0]
+                    + vec.y * this.values[3];
+    
+    this.values[7] += vec.x * this.values[1]
+                    + vec.y * this.values[4];
+
+    this.values[8] += vec.x * this.values[2]
+                    + vec.y * this.values[5];
       
     return this;
   }
@@ -137,13 +157,12 @@ export class Mat3 extends Mat {
    */
   scale(vec) {    
     this.values[0] *= vec.x;
-    this.values[1] *= vec.y;
+    this.values[1] *= vec.x;
+    this.values[2] *= vec.x;  
     
-    this.values[3] *= vec.x;
+    this.values[3] *= vec.y;
     this.values[4] *= vec.y;
-    
-    this.values[6] *= vec.x;  
-    this.values[7] *= vec.y;
+    this.values[5] *= vec.y;
     
     return this;
   }
@@ -158,27 +177,27 @@ export class Mat3 extends Mat {
    */
   rotate(ang) {
     const v00 = this.values[0];
-    const v01 = this.values[1];
-    const v02 = this.values[2];
+    const v10 = this.values[1];
+    const v20 = this.values[2];
     
-    const v10 = this.values[3];
+    const v01 = this.values[3];
     const v11 = this.values[4];
-    const v12 = this.values[5];
+    const v21 = this.values[5];
 
-    const v20 = this.values[6];
-    const v21 = this.values[7];
+    const v02 = this.values[6];
+    const v12 = this.values[7];
     const v22 = this.values[8];
 
     const s = Math.sin(ang);
     const c = Math.cos(ang);
 
     this.values[0] = c * v00 + s * v01;
-    this.values[3] = c * v10 + s * v11;
-    this.values[6] = c * v20 + s * v21;
+    this.values[1] = c * v10 + s * v11;
+    this.values[2] = c * v20 + s * v21;
   
-    this.values[1] = c * v01 - s * v00;
+    this.values[3] = c * v01 - s * v00;
     this.values[4] = c * v11 - s * v10;
-    this.values[7] = c * v21 - s * v20;
+    this.values[5] = c * v21 - s * v20;
     
     return this;
   }
@@ -190,15 +209,15 @@ export class Mat3 extends Mat {
    */
   det() {
     const v00 = this.values[0];
-    const v01 = this.values[1];
-    const v02 = this.values[2];
+    const v10 = this.values[1];
+    const v20 = this.values[2];
     
-    const v10 = this.values[3];
+    const v01 = this.values[3];
     const v11 = this.values[4];
-    const v12 = this.values[5];
+    const v21 = this.values[5];
 
-    const v20 = this.values[6];
-    const v21 = this.values[7];
+    const v02 = this.values[6];
+    const v12 = this.values[7];
     const v22 = this.values[8];
 
     return v00 * ( v22 * v11 - v21 * v12)
@@ -216,15 +235,15 @@ export class Mat3 extends Mat {
    */
   inverse() {
     const v00 = this.values[0];
-    const v01 = this.values[1];
-    const v02 = this.values[2];
+    const v10 = this.values[1];
+    const v20 = this.values[2];
     
-    const v10 = this.values[3];
+    const v01 = this.values[3];
     const v11 = this.values[4];
-    const v12 = this.values[5];
+    const v21 = this.values[5];
 
-    const v20 = this.values[6];
-    const v21 = this.values[7];
+    const v02 = this.values[6];
+    const v12 = this.values[7];
     const v22 = this.values[8];
     
     const tmp0 =  v22 * v11 - v21 * v12;
@@ -238,13 +257,13 @@ export class Mat3 extends Mat {
     det = 1.0 / det;
 
     this.values[0] = tmp0 * det;
-    this.values[3] = (-v22 * v10 + v20 * v12) * det;
-    this.values[6] = ( v21 * v10 - v20 * v11) * det;
-    this.values[1] = tmp1 * det;
+    this.values[1] = (-v22 * v10 + v20 * v12) * det;
+    this.values[2] = ( v21 * v10 - v20 * v11) * det;
+    this.values[3] = tmp1 * det;
     this.values[4] = ( v22 * v00 - v20 * v02) * det;
-    this.values[7] = (-v21 * v00 + v20 * v01) * det;
-    this.values[2] = tmp2 * det;
-    this.values[5] = (-v12 * v00 + v10 * v02) * det;
+    this.values[5] = (-v21 * v00 + v20 * v01) * det;
+    this.values[6] = tmp2 * det;
+    this.values[7] = (-v12 * v00 + v10 * v02) * det;
     this.values[8] = ( v11 * v00 - v10 * v01) * det;
     
     return this;

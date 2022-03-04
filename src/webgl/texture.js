@@ -4,11 +4,13 @@
  * @class Texture representing an OpenGL shader
  */
 export class Texture {
+  #gl;
+  
   /**
    * Creates an instance of a Texture.
    */
   constructor(gl, id, image) {
-    this.gl = gl;
+    this.#gl = gl;
     this.id = id;
     this.image = image;
     this.level = 0;
@@ -21,29 +23,30 @@ export class Texture {
    *
    */
   load() {
-    this.gl.bindTexture(this.gl.TEXTURE_2D, this.id);
-    this.gl.texImage2D(
-      this.gl.TEXTURE_2D,
+    this.#gl.bindTexture(this.#gl.TEXTURE_2D, this.id);
+    this.#gl.texImage2D(
+      this.#gl.TEXTURE_2D,
       this.level,
       this.internalFormat,
       this.srcFormat,
       this.srcType,
       this.image
     );
-    this.gl.bindTexture(this.gl.TEXTURE_2D, null);
+    this.#gl.bindTexture(this.#gl.TEXTURE_2D, null);
   }
 
   /**
    *
    */
   bind() {
-    this.gl.activeTexture(this.gl.TEXTURE0);
-    this.gl.bindTexture(this.gl.TEXTURE_2D, this.id);
-    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.REPEAT);
-    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.REPEAT);
-    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
-    this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
-    this.gl.generateMipmap(this.gl.TEXTURE_2D);
+    this.#gl.activeTexture(this.#gl.TEXTURE0);
+    this.#gl.bindTexture(this.#gl.TEXTURE_2D, this.id);
+    this.#gl.texParameteri(this.#gl.TEXTURE_2D, this.#gl.TEXTURE_WRAP_S, this.#gl.REPEAT);
+    this.#gl.texParameteri(this.#gl.TEXTURE_2D, this.#gl.TEXTURE_WRAP_T, this.#gl.REPEAT);
+    this.#gl.texParameteri(this.#gl.TEXTURE_2D, this.#gl.TEXTURE_MIN_FILTER, this.#gl.LINEAR);
+    
+  this.#gl.texParameteri(this.#gl.TEXTURE_2D, this.#gl.TEXTURE_MAG_FILTER, this.#gl.LINEAR);
+    this.#gl.generateMipmap(this.#gl.TEXTURE_2D);
   }
 
   /**
@@ -59,6 +62,9 @@ export class Texture {
       image.onload = () => {
         const texture = gl.createTexture();
         res(new Texture(gl, texture, image));
+      };
+      image.onerror = (event) => {
+        rej("Error loading the image.");
       };
       image.crossOrigin = '';
       image.src = url;
