@@ -62,7 +62,7 @@ export class Sphere {
     for(let x = 0; x <= num_vert_slices; ++x) {
 
       // Iterate over each horizontal slice
-      for(let y = 0; y < num_hori_slices; ++y) {
+      for(let y = 0; y <= num_hori_slices; ++y) {
       
         // Find the angles
         const angle0 =     Math.PI * x / num_vert_slices;
@@ -79,12 +79,12 @@ export class Sphere {
 
         // Push new vertex with position, uv and normal
         verteces.push(new Vec3(vx, vy, vz));
-        uvs.push(new Vec2(u, v));        
+        uvs.push(new Vec2(u, v));
         normals.push(new Vec3(vx, vy, vz));
       }
     }
 
-    const L = num_hori_slices;
+    const L = num_hori_slices + 1;
 
     // Iterate over each vertical slice
     for(let x = 0; x < num_vert_slices; ++x) {
@@ -104,11 +104,12 @@ export class Sphere {
           triangles.push(new Vec3(i0, i2, i3 + L));
         }        
         if (x != 0) {
-          triangles.push(new Vec3(i0, i1, i3 + c));
+          triangles.push(new Vec3(i0, i1, i3 + L));
         }
       }
     }
 
+    // uvs.forEach((v) => console.log(v.toString(2)));
     // verteces.forEach((v) => console.log(v.toString(3)));
     // triangles.forEach((t) => console.log(t.toString(0)));
 
