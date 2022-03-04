@@ -36,7 +36,7 @@
       }
 
       // Start testing vectors
-      import {Vec2, Vec3, Vec4} from "/src/all.js";
+      import {Vec2, Vec3, Vec4, Mat2, Mat3, Mat4} from "/src/all.js";
 
       test("Types", [
         // [#0] Count
@@ -269,8 +269,8 @@
           const a = Vec2.Zeros();
           const b = Vec2.Ones();
           const c = new Vec2(1, 2);
-          return a.magnitude_squared() === 0 && b.magnitude_squared() === 2
-            && c.magnitude_squared() === 5;
+          return a.magnitudeSquared() === 0 && b.magnitudeSquared() === 2
+            && c.magnitudeSquared() === 5;
         },
 
         // [#8] Clone
@@ -326,6 +326,14 @@
           const a = new Vec2(1, 0).negate();
           const b = new Vec2(1, 2).negate();
           return eq(a.values, [-1, 0]) && eq(b.values, [-1, -2]);
+        },
+
+        // [#14] Transform
+        () => {
+          const a = new Vec2(1, 2);
+          const m = new Mat2(0, 1, 2, 3);
+          a.transform(m);
+          return eq(a.values, [4, 7]);
         },
       ]);
       
@@ -406,8 +414,8 @@
           const a = Vec3.Zeros();
           const b = Vec3.Ones();
           const c = new Vec3(1, 2, 3);
-          return a.magnitude_squared() === 0 && b.magnitude_squared() === 3
-            && c.magnitude_squared() === 14;
+          return a.magnitudeSquared() === 0 && b.magnitudeSquared() === 3
+            && c.magnitudeSquared() === 14;
         },
 
         // [#8] Clone
@@ -463,6 +471,14 @@
           const a = new Vec3(1, 1, 0).negate();
           const b = new Vec3(1, 2, 3).negate();
           return eq(a.values, [-1, -1, 0]) && eq(b.values, [-1, -2, -3]);
+        },
+
+        // [#14] Transform
+        () => {
+          const a = new Vec3(1, 2, 3);
+          const m = new Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8);
+          a.transform(m);
+          return eq(a.values, [24, 30, 36]);
         },
       ]);
 
@@ -543,8 +559,8 @@
           const a = Vec4.Zeros();
           const b = Vec4.Ones();
           const c = new Vec4(1, 2, 3, 4);
-          return a.magnitude_squared() === 0 && b.magnitude_squared() === 4
-            && c.magnitude_squared() === 30;
+          return a.magnitudeSquared() === 0 && b.magnitudeSquared() === 4
+            && c.magnitudeSquared() === 30;
         },
 
         // [#8] Clone
@@ -600,6 +616,14 @@
           const a = new Vec4(1, 1, 0, 0).negate();
           const b = new Vec4(1, 2, 3, 4).negate();
           return eq(a.values, [-1, -1, 0, 0]) && eq(b.values, [-1, -2, -3, -4]);
+        },
+
+        // [#14] Transform
+        () => {
+          const a = new Vec4(1, 2, 3, 4);
+          const m = new Mat4(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
+          a.transform(m);
+          return eq(a.values, [80, 90, 100, 110]);
         },
       ]);
 

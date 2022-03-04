@@ -184,16 +184,34 @@ export class Vec {
    * @return {number} the length
    */
   magnitude() {
-    return Math.sqrt(this.magnitude_squared());
+    return Math.sqrt(this.magnitudeSquared());
   }
 
   /**
    * Compute the length squared of the Vec.
    *
+   * Transform the Vec by a Mat.
+   *
    * @return {number} the length squared
    */
-  magnitude_squared() {
+  magnitudeSquared() {
     return this.dot(this);
+  }
+
+  /**
+   * Transform the Vec by a Mat.
+   * Operations can be concatenated.
+   *
+   * @param {Mat} mat the matrix to apply
+   *
+   * @return {Vec} this
+   */
+  transform(mat) {
+    const tmp = this.clone();
+    for (let i = 0; i < this.constructor.count(); ++i) {
+      this.values[i] = mat.col(i).dot(tmp);
+    }
+    return this;
   }
 
   /**
