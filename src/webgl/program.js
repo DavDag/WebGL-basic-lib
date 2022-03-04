@@ -4,13 +4,15 @@
  * @class Program representing an OpenGL program
  */
 export class Program {
+  #gl;
+  
   /**
    * Creates an instance of a Program.
    *
    * @param {WebGLRenderingContext} gl the WebGL context
    */
   constructor(gl) {
-    this.gl = gl;
+    this.#gl = gl;
     this.id = gl.createProgram();
   }
 
@@ -20,31 +22,64 @@ export class Program {
    * @param {Shader} shader the shader to attach
    */
   attachShader(shader) {
-    this.gl.attachShader(this.id, shader.id);
+    this.#gl.attachShader(this.id, shader.id);
   }
 
   /**
    * Link the Program. [once]
    */
   link() {
-    this.gl.linkProgram(this.id);
+    this.#gl.linkProgram(this.id);
   }
 
   /**
    * Use the Program.
    */
   use() {
-    this.gl.useProgram(this.id);
+    this.#gl.useProgram(this.id);
+  }
+
+  /**
+   * Unbind program.
+   */
+  static unbind(gl) {
+    gl.useProgram(null);
   }
 
   /**
    * Bind attributes inside the Program. [once]
    *
-   * @param {(number, string)[]} attrs the attributes list
+   * @param {list of (number, string)} attrs the attributes list
    */
   attributes(attrs) {
-    attrs.forEach((ind, name) => {
-      this.gl.bindAttribLocation(this.id, ind, name);      
+    attrs.forEach(([ind, name]) => {
+      this.#gl.bindAttribLocation(this.id, ind, name);      
+    });
+  }
+
+  /**
+   * Declare that a uniform exist. [once]
+   *
+   * @param {string} name the name of the uniform
+   * @param {string} type the type of the uniform
+   *
+   * @return {object} a reference to the uniform obj
+   */
+  declareUniform(name, type) {
+    const method = (id, value) => this["uniform" + type](id, value);
+    const id = this.#gl.getUniformLocation(this.id, name);
+    this[name] = { update: (value) => method(id, value), id };
+    return this[name];
+  }
+
+  /**
+   * Declare a list of uniform. [once]
+   *
+   * @param {list of (string, string)} uniforms the uniform list
+   */
+  declareUniforms(uniforms) {
+    uniforms.forEach(([name, type]) => {
+      this.declareUniform(name, type);
     });
   }
 
@@ -52,10 +87,11 @@ export class Program {
    * Set uniform value for the Program.
    * The Program must be in use.
    *
-   * @param {number} uniformId the uniform location
-   * @param {any} uniformValue the uniform value
+   * @param {number} id the uniform location
+   * @param {?} value the uniform value
    */
-  uniform1f(uniformId, uniformValue) {
-    this.gl.uniform1f(uniformId, uniformValue);
-  }
+  uniform1f(id, value) { this.#gl.uniform1f(id, value); }
+  uniform1i(id, value) { this.#gl.uniform1i(id, value); }
+  uniform4fv(id, value) { this.#gl.uniform4fv(id, value); }
+  uniformMatrix4fv(id, value) { this.#gl.uniformMatrix4fv(id, false, value); }
 }

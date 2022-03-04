@@ -37,14 +37,28 @@ export class Mat {
 
   /**
    * Syntactic-sugar for a Mat initialization from array.
+   * Array contains elements in Column-Major order.
    * Should be implemented by specialized classes.
    * 
    * @param {array of number} arr the array to copy
    * 
-   * @return {Mat} the newly created vector
+   * @return {Mat} the newly created matrix
    */
-  static FromArray(arr) {
-    throw new Error("FromArray() not implemented");
+  static FromArrayCM(arr) {
+    throw new Error("FromArrayCM() not implemented");
+  }
+
+  /**
+   * Syntactic-sugar for a Mat initialization from array.
+   * Array contains elements in Row-Major order.
+   * Should be implemented by specialized classes.
+   * 
+   * @param {array of number} arr the array to copy
+   * 
+   * @return {Mat} the newly created matrix
+   */
+  static FromArrayRM(arr) {
+    throw new Error("FromArrayRM() not implemented");
   }
 
   /**
@@ -56,7 +70,7 @@ export class Mat {
    * @return {number} the number in position [row][col]
    */
   get(row, col) {
-    return this.values[row * this.constructor.side() + col];
+    return this.values[col * this.constructor.side() + row];
   }
 
   /**
@@ -66,7 +80,7 @@ export class Mat {
    * @param {number} col index of the column
    */
   set(row, col, value) {
-    this.values[row * this.constructor.side() + col] = value;
+    this.values[col * this.constructor.side() + row] = value;
   }
 
   /**
@@ -130,7 +144,7 @@ export class Mat {
    * @return {Vec} the newly created vector
    */
   clone() {
-    return this.constructor.FromArray(this.values);
+    return this.constructor.FromArrayCM(this.values);
   }
 
   /**
@@ -143,7 +157,7 @@ export class Mat {
     for (let i = 0; i < this.count(); ++i)
       if ((i % (this.side() + 1)) === 0)
         arr[i] = 1;
-    return this.FromArray(arr);
+    return this.FromArrayCM(arr);
   }
 
   /**
@@ -154,7 +168,7 @@ export class Mat {
    * @return {Mat} the newly created vector
    */
   static All(v) {
-    return this.FromArray(new Array(this.count()).fill(v));
+    return this.FromArrayCM(new Array(this.count()).fill(v));
   }
 
   /**

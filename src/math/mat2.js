@@ -15,8 +15,8 @@ export class Mat2 extends Mat {
    */
   constructor(x_r1, y_r1,
               x_r2, y_r2) {
-    super([x_r1, y_r1,
-           x_r2, y_r2]);
+    super([x_r1, x_r2,
+           y_r1, y_r2]);
   }
 
   /**
@@ -40,11 +40,25 @@ export class Mat2 extends Mat {
   /**
    * Syntactic-sugar for a Mat2 initialization with an array.
    *
+   * Column-Major version.
+   *
    * @return {Mat2} the newly created vector
    */
-  static FromArray(arr) {
-    return new Mat2(arr[ 0], arr[ 1],
-                    arr[ 2], arr[ 3]);
+  static FromArrayCM(arr) {
+    return new Mat2(arr[0], arr[2],
+                    arr[1], arr[3]);
+  }
+
+  /**
+   * Syntactic-sugar for a Mat2 initialization with an array.
+   *
+   * Row-Major version.
+   *
+   * @return {Mat2} the newly created vector
+   */
+  static FromArrayRM(arr) {
+    return new Mat2(arr[0], arr[1],
+                    arr[2], arr[3]);
   }
 
   /**
@@ -55,8 +69,8 @@ export class Mat2 extends Mat {
    * @return {Vec2} the selected row
    */
   row(index) {
-    return new Vec2(this.values[index * 2 + 0],
-                    this.values[index * 2 + 1]);
+    return new Vec2(this.values[0 + index],
+                    this.values[2 + index]);
   }
 
   /**
@@ -67,8 +81,8 @@ export class Mat2 extends Mat {
    * @return {Vec2} the selected column
    */
   col(index) {
-    return new Vec2(this.values[ 0 + index],
-                    this.values[ 2 + index]);
+    return new Vec2(this.values[index * 2 + 0],
+                    this.values[index * 2 + 1]);
   }
 
   /**
@@ -103,8 +117,9 @@ export class Mat2 extends Mat {
    */
   scale(vec) {
     this.values[0] *= vec.x;
-    this.values[1] *= vec.y;
-    this.values[2] *= vec.x;
+    this.values[1] *= vec.x;
+    
+    this.values[2] *= vec.y;
     this.values[3] *= vec.y;
     
     return this;
@@ -123,13 +138,13 @@ export class Mat2 extends Mat {
     const c = Math.cos(ang);
 
     const v00 = this.values[0];
-    const v01 = this.values[1];
-    const v10 = this.values[2];
+    const v10 = this.values[1];
+    const v01 = this.values[2];
     const v11 = this.values[3];
 
     this.values[0] = v00 *  c + v01 * s;
-    this.values[1] = v00 * -s + v01 * c;
-    this.values[2] = v10 *  c + v11 * s;
+    this.values[1] = v10 *  c + v11 * s;
+    this.values[2] = v00 * -s + v01 * c;
     this.values[3] = v10 * -s + v11 * c;
     
     return this;
@@ -141,7 +156,8 @@ export class Mat2 extends Mat {
    * @return {number} the determinant
    */
   det() {
-    return this.values[0] * this.values[3] - this.values[1] * this.values[2];
+    return this.values[0] * this.values[3]
+         - this.values[2] * this.values[1];
   }
 
   /**
@@ -154,8 +170,8 @@ export class Mat2 extends Mat {
    */
   inverse() {
     const v00 = this.values[0];
-    const v01 = this.values[1];
-    const v10 = this.values[2];
+    const v10 = this.values[1];
+    const v01 = this.values[2];
     const v11 = this.values[3];
     
     var det = v00 * v11 - v01 * v10;
@@ -165,8 +181,8 @@ export class Mat2 extends Mat {
     det = 1.0 / det;
 
     this.values[0] =  v11 * det;
-    this.values[1] = -v01 * det;
-    this.values[2] = -v10 * det;
+    this.values[1] = -v10 * det;
+    this.values[2] = -v01 * det;
     this.values[3] =  v00 * det;
     
     return this;
