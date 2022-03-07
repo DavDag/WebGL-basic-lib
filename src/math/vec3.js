@@ -2,6 +2,7 @@
 
 import {Vec} from "./vec.js";
 import {Vec2} from "./vec2.js";
+import {Vec4} from "./vec4.js";
 
 /**
  * @class Vec3 representing a vector with 3 dimensions.
@@ -43,6 +44,17 @@ export class Vec3 extends Vec {
    */
   toVec2() {
     return new Vec2(this.x, this.y);
+  }
+
+  /**
+   * Syntactic-sugar for a Vec4 initialization from a Vec3.
+   *
+   * @param {number} w the w coordinate
+   *
+   * @return {Vec4} the newly created vector
+   */
+  toVec4(w) {
+    return new Vec4(this.x, this.y, this.z, w);
   }
 
   /**

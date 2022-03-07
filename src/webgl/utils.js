@@ -24,6 +24,9 @@ export function RetrieveWebGLContext(elementId) {
   // Check for errors
   if (gl == null) throw new Error("WebGL is not supported");
 
+  // Insert canvas ref into gl context
+  gl.canvasEl = canvas;
+
   // Result
   return gl;
 }

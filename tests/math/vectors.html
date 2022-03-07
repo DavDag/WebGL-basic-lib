@@ -20,9 +20,14 @@
         bArr.forEach((b, ind) => {
           if (ind % 4 === 0 && ind !== 0) res.innerHTML += "<br>";
           if (ind < 10) ind = "0" + ind;
-          if (b()) {
-            res.innerHTML += "#" + ind + " => ✅ ";
-          } else {
+          try {
+            if (b()) {
+              res.innerHTML += "#" + ind + " => ✅ ";
+            } else {
+              res.innerHTML += "#" + ind + " => ❌ ";
+            }
+          } catch (e) {
+            console.error(e);
             res.innerHTML += "#" + ind + " => ❌ ";
           }
         });
@@ -650,7 +655,19 @@
         () => {
           const a = new Vec3(1, 2, 3);
           return eq(a.toVec2().values, [1, 2]);
-        }
+        },
+
+        // [#3] Conversion: Vec2 -> Vec3, Vec4
+        () => {
+          const a = new Vec2(1, 2);
+          return eq(a.toVec3(3).values, [1, 2, 3]) && eq(a.toVec4(3, 4).values, [1, 2, 3, 4]);
+        },
+
+        // [#4] Conversion: Vec3 -> Vec4
+        () => {
+          const a = new Vec3(1, 2, 3);
+          return eq(a.toVec4(4).values, [1, 2, 3, 4]);
+        },
       ]);
     </script>
     <!--    -->

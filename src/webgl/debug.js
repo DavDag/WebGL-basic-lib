@@ -56,7 +56,7 @@ export class Debug {
    *
    * @param {WebGLRenderingContext} gl the webgl context
    */
-  static initialize(gl) {
+  static Initialize(gl) {
     Debug.#gl = gl;
 
     // Create buffers

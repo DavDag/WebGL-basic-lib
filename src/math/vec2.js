@@ -1,6 +1,8 @@
 /** @author: Davide Risaliti davdag24@gmail.com */
 
 import {Vec} from "./vec.js";
+import {Vec3} from "./vec3.js";
+import {Vec4} from "./vec4.js";
 
 /**
  * @class Vec2 representing a vector with 2 dimensions.
@@ -14,6 +16,29 @@ export class Vec2 extends Vec {
    */
   constructor(x, y) {
     super([x, y]);
+  }
+
+  /**
+   * Syntactic-sugar for a Vec3 initialization from a Vec2.
+   *
+   * @param {number} z the z coordinate
+   *
+   * @return {Vec3} the newly created vector
+   */
+  toVec3(z) {
+    return new Vec3(this.x, this.y, z);
+  }
+
+  /**
+   * Syntactic-sugar for a Vec4 initialization from a Vec2.
+   *
+   * @param {number} z the z coordinate
+   * @param {number} w the w coordinate
+   *
+   * @return {Vec4} the newly created vector
+   */
+  toVec4(z, w) {
+    return new Vec4(this.x, this.y, z, w);
   }
 
   /**
