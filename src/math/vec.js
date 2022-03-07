@@ -209,7 +209,7 @@ export class Vec {
   transform(mat) {
     const tmp = this.clone();
     for (let i = 0; i < this.constructor.count(); ++i) {
-      this.values[i] = mat.col(i).dot(tmp);
+      this.values[i] = mat.row(i).dot(tmp);
     }
     return this;
   }

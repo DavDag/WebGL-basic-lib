@@ -338,7 +338,7 @@
           const a = new Vec2(1, 2);
           const m = new Mat2(0, 1, 2, 3);
           a.transform(m);
-          return eq(a.values, [4, 7]);
+          return eq(a.values, [2, 8]);
         },
       ]);
       
@@ -483,7 +483,7 @@
           const a = new Vec3(1, 2, 3);
           const m = new Mat3(0, 1, 2, 3, 4, 5, 6, 7, 8);
           a.transform(m);
-          return eq(a.values, [24, 30, 36]);
+          return eq(a.values, [8, 26, 44]);
         },
       ]);
 
@@ -628,7 +628,7 @@
           const a = new Vec4(1, 2, 3, 4);
           const m = new Mat4(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15);
           a.transform(m);
-          return eq(a.values, [80, 90, 100, 110]);
+          return eq(a.values, [20, 60, 100, 140]);
         },
       ]);
 
