@@ -71,6 +71,10 @@ export class Vec2 extends Vec {
   set w(value) { this.values[0] = value; }
   set h(value) { this.values[1] = value; }
 
+  // Syntactic sugar to support "texture" accessors as coordinates
+  set u(value) { this.values[0] = value; }
+  set v(value) { this.values[1] = value; }
+
   /**
    * Getter to retrieve the x or y coordinate.
    * 
@@ -82,4 +86,8 @@ export class Vec2 extends Vec {
   // Syntactic sugar to support "size" accessors as coordinates
   get w() { return this.values[0]; }
   get h() { return this.values[1]; }
+
+  // Syntactic sugar to support "texture" accessors as coordinates
+  get u() { return this.values[0]; }
+  get v() { return this.values[1]; }
 }

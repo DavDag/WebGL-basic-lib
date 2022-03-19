@@ -1,0 +1,19 @@
+{
+  "scripts": {
+    "lint": "eslint src/*",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "eslint": "^8.11.0",
+    "jest": "^27.5.1"
+  },
+  "type": "module",
+  "jest": {
+    "verbose": true,
+    "errorOnDeprecated": true,
+    "setupFiles": [
+      "./src/jest_helpers.js"
+    ]
+  }
+}
