@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "prestart": "npx webpack --mode=development",
+    "start": "node app.js"
+  },
+  "type": "module",
+  "dependencies": {
+    "express": "^4.17.3",
+    "webgl-basic-lib": "file:../..",
+    "webpack": "^5.70.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^4.9.2"
+  }
+}
