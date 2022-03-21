@@ -1,7 +1,6 @@
 /** @author: Davide Risaliti davdag24@gmail.com */
 
-import {Shader} from "./shader.js";
-import {Program} from "./program.js";
+import {Shader, Program} from "../all";
 
 const POINTS_VERT_SHADER =
 `

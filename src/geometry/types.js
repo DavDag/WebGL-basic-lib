@@ -1,6 +1,6 @@
 /** @author: Davide Risaliti davdag24@gmail.com */
 
-import {Debug} from "/src/webgl/debug.js";
+import {Debug} from "../all";
 
 /**
  * @class Shape representing a generic geometry.

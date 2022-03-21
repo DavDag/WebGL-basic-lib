@@ -1,8 +1,7 @@
 /** @author: Davide Risaliti davdag24@gmail.com */
 
-import {Vec} from "./vec.js";
-import {Vec2} from "./vec2.js";
-import {Vec3} from "./vec3.js";
+import {Vec} from "./vec";
+import {Vec2, Vec3} from "../all";
 
 /**
  * @class Vec4 representing a vector with 4 dimensions.

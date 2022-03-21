@@ -1,9 +1,8 @@
 
 import {expect, test} from '@jest/globals';
-import {Vec2} from "./vec2";
-import {Mat2} from "./mat2";
+import {Mat2, Vec2} from "../all";
 
-test("Vec2 Count()", () => {
+test("Vec2 Count", () => {
     expect(Vec2.count()).toBe(2);
 });
 
@@ -12,15 +11,15 @@ test("Vec2 Constructor", () => {
 });
 
 test("Vec2 Zeros", () => {
-    expect(global.CmpVecToArr(Vec2.Zeros(), [0, 0])).toBe(true);
+    expect(global.CmpVecToArr(Vec2.Zeros(), new Array(2).fill(0))).toBe(true);
 });
 
 test("Vec2 Ones", () => {
-    expect(global.CmpVecToArr(Vec2.Ones(), [1, 1])).toBe(true);
+    expect(global.CmpVecToArr(Vec2.Ones(), new Array(2).fill(1))).toBe(true);
 });
 
 test("Vec2 All", () => {
-    expect(global.CmpVecToArr(Vec2.All(2.534), [2.534, 2.534])).toBe(true);
+    expect(global.CmpVecToArr(Vec2.All(2.534), new Array(2).fill(2.534))).toBe(true);
 });
 
 test("Vec2 FromArray", () => {

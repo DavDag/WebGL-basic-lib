@@ -1,9 +1,8 @@
 
 import {expect, test} from '@jest/globals';
-import {Vec3} from "./vec3";
-import {Mat3} from "./mat3";
+import {Mat3, Vec3} from "../all";
 
-test("Vec3 Count()", () => {
+test("Vec3 Count", () => {
     expect(Vec3.count()).toBe(3);
 });
 
@@ -12,15 +11,15 @@ test("Vec3 Constructor", () => {
 });
 
 test("Vec3 Zeros", () => {
-    expect(global.CmpVecToArr(Vec3.Zeros(), [0, 0, 0])).toBe(true);
+    expect(global.CmpVecToArr(Vec3.Zeros(), new Array(3).fill(0))).toBe(true);
 });
 
 test("Vec3 Ones", () => {
-    expect(global.CmpVecToArr(Vec3.Ones(), [1, 1, 1])).toBe(true);
+    expect(global.CmpVecToArr(Vec3.Ones(), new Array(3).fill(1))).toBe(true);
 });
 
 test("Vec3 All", () => {
-    expect(global.CmpVecToArr(Vec3.All(2.534), [2.534, 2.534, 2.534])).toBe(true);
+    expect(global.CmpVecToArr(Vec3.All(2.534), new Array(3).fill(2.534))).toBe(true);
 });
 
 test("Vec3 FromArray", () => {

@@ -1,6 +1,6 @@
 /** @author: Davide Risaliti davdag24@gmail.com */
 
-import {Vec2} from "/src/math/vec2.js";
+import {Vec2} from "../all";
 
 /*
  * Retrieve OpenGL ES context.

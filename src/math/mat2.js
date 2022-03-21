@@ -1,7 +1,7 @@
 /** @author: Davide Risaliti davdag24@gmail.com */
 
-import {Mat} from "./mat.js";
-import {Vec2} from "./vec2.js";
+import {Mat} from "./mat";
+import {Vec2} from "../all";
 
 /**
  * @class Mat representing a 2x2 matrix.

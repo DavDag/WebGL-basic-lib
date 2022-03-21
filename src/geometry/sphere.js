@@ -1,9 +1,8 @@
 /** @author: Davide Risaliti davdag24@gmail.com */
 
-import {LinesFromTriangles} from "/src/webgl/utils.js";
-import {BasicShape, TexturedShape, DebugShape} from "./types.js";
-import {Vec2} from "/src/math/vec2.js";
-import {Vec3} from "/src/math/vec3.js";
+import {LinesFromTriangles} from "../all";
+import {BasicShape, TexturedShape, DebugShape} from "../all";
+import {Vec2, Vec3} from "../all";
 
 /**
  * @class Sphere representing an Sphere.

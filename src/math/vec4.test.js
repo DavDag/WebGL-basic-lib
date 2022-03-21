@@ -1,9 +1,8 @@
 
 import {expect, test} from '@jest/globals';
-import {Vec4} from "./vec4";
-import {Mat4} from "./mat4";
+import {Mat4, Vec4} from "../all";
 
-test("Vec4 Count()", () => {
+test("Vec4 Count", () => {
     expect(Vec4.count()).toBe(4);
 });
 
@@ -12,15 +11,15 @@ test("Vec4 Constructor", () => {
 });
 
 test("Vec4 Zeros", () => {
-    expect(global.CmpVecToArr(Vec4.Zeros(), [0, 0, 0, 0])).toBe(true);
+    expect(global.CmpVecToArr(Vec4.Zeros(), new Array(4).fill(0))).toBe(true);
 });
 
 test("Vec4 Ones", () => {
-    expect(global.CmpVecToArr(Vec4.Ones(), [1, 1, 1, 1])).toBe(true);
+    expect(global.CmpVecToArr(Vec4.Ones(), new Array(4).fill(1))).toBe(true);
 });
 
 test("Vec4 All", () => {
-    expect(global.CmpVecToArr(Vec4.All(2.534), [2.534, 2.534, 2.534, 2.534])).toBe(true);
+    expect(global.CmpVecToArr(Vec4.All(2.534), new Array(4).fill(2.534))).toBe(true);
 });
 
 test("Vec4 FromArray", () => {
