@@ -6,7 +6,20 @@
   "devDependencies": {
     "cross-env": "^7.0.3",
     "eslint": "^8.11.0",
-    "jest": "^27.5.1",
+    "jest": "^27.5.1"
+  },
+  "type": "module",
+  "jest": {
+    "errorOnDeprecated": true,
+    "setupFiles": [
+      "./src/jest_helpers.js"
+    ]
+  },
+  "name": "webgl-basic-lib",
+  "description": "Simple and expressive utility lib that aims at keeping WebGL at \"low level\" while improving the syntax.\r Written for didactic purposes.",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
     "acorn-globals": "^6.0.0",
     "acorn": "^8.7.0",
     "acorn-jsx": "^5.3.2",
@@ -280,19 +293,6 @@
     "xml-name-validator": "^3.0.0",
     "word-wrap": "^1.2.3",
     "xmlchars": "^2.2.0"
-  },
-  "type": "module",
-  "jest": {
-    "errorOnDeprecated": true,
-    "setupFiles": [
-      "./src/jest_helpers.js"
-    ]
-  },
-  "name": "webgl-basic-lib",
-  "description": "Simple and expressive utility lib that aims at keeping WebGL at \"low level\" while improving the syntax.\r Written for didactic purposes.",
-  "version": "1.0.0",
-  "main": "index.js",
-  "dependencies": {
   },
   "repository": {
     "type": "git",
