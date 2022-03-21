@@ -10,7 +10,6 @@
   },
   "type": "module",
   "jest": {
-    "verbose": true,
     "errorOnDeprecated": true,
     "setupFiles": [
       "./src/jest_helpers.js"

@@ -1,3 +1,4 @@
+/** @author: Davide Risaliti davdag24@gmail.com */
 
 import {expect, test} from '@jest/globals';
 import {Mat3, Vec3} from "../all";
@@ -34,6 +35,9 @@ test("Vec3 Getter", () => {
     expect(vec.r).toBeCloseTo(1);
     expect(vec.g).toBeCloseTo(2);
     expect(vec.b).toBeCloseTo(3);
+    expect(vec.h).toBeCloseTo(1);
+    expect(vec.s).toBeCloseTo(2);
+    expect(vec.v).toBeCloseTo(3);
 });
 
 test("Vec3 Setter", () => {
@@ -46,6 +50,10 @@ test("Vec3 Setter", () => {
     vec.g += 2;
     vec.b += 3;
     expect(global.CmpVecToArr(vec, [3, 6, 9])).toBe(true);
+    vec.h = 4;
+    vec.s += 2;
+    vec.v += 3;
+    expect(global.CmpVecToArr(vec, [4, 8, 12])).toBe(true);
 });
 
 test("Vec3 ToString", () => {

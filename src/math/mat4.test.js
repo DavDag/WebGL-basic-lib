@@ -1,3 +1,5 @@
+/** @author: Davide Risaliti davdag24@gmail.com */
+
 import { expect, test } from '@jest/globals';
 import { Mat4, Vec3, Vec4, toRad } from "../all";
 

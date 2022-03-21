@@ -120,7 +120,7 @@ export class Vec {
    * Round the Vec.
    * Operations can be concatenated.
    *
-   * @param {number} decimal the decimal places to left
+   * @param {number} decimal the rounding precision
    *
    * @return {Vec} this
    */

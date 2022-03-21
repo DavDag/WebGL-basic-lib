@@ -70,6 +70,11 @@ export class Vec3 extends Vec {
   set g(value) { this.values[1] = value; }
   set b(value) { this.values[2] = value; }
 
+  // Syntactic sugar to support "color" channels as coordinates
+  set h(value) { this.values[0] = value; }
+  set s(value) { this.values[1] = value; }
+  set v(value) { this.values[2] = value; }
+
   /**
    * Getter to retrieve the x, y or z coordinate.
    * 
@@ -83,6 +88,11 @@ export class Vec3 extends Vec {
   get r() { return this.values[0]; }
   get g() { return this.values[1]; }
   get b() { return this.values[2]; }
+  
+  // Syntactic sugar to support "color" channels as coordinates
+  get h() { return this.values[0]; }
+  get s() { return this.values[1]; }
+  get v() { return this.values[2]; }
 
   /**
    * Compute the cross product with another vector.
