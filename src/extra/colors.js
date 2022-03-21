@@ -1,6 +1,6 @@
 /** @author: Davide Risaliti davdag24@gmail.com */
 
-import {Vec3} from "../all";
+import {Vec3, Vec4} from "../all";
 
 /**
  * @class Colors wrapping color utilities
@@ -79,5 +79,64 @@ export class Colors {
     
     // Result
     return new Vec3(r + m, g + m, b + m);
+  }
+
+  /**
+   * Convert from Hex String to RGB.
+   * The input string can contains the "#" character at the begin.
+   *
+   * RGB values in range [0.0, 1.0]
+   *
+   * @param {string} hex the Hexadecimal String input color
+   * 
+   * @return {Vec3} the RGB equivalent
+   */
+  static HexToRgb(hex) {
+    // Remove # at the begin (if exists)
+    hex = hex.substring(hex.indexOf("#") + 1);
+  
+    // Ensure hex string is of size 6
+    if (hex.length != 6) throw new Error("Unsupported format");
+  
+    // Parse value
+    const bigint = parseInt(hex, 16);
+  
+    // Extract components
+    const r = (bigint >> 16) & 0xFF;
+    const g = (bigint >>  8) & 0xFF;
+    const b = (bigint >>  0) & 0xFF;
+
+    // Return result
+    return new Vec3(r, g, b).div(255);
+  }
+
+  /**
+   * Convert from Hex String to RGBA.
+   * The input string can contains the "#" character at the begin.
+   *
+   * RGBA values in range [0.0, 1.0]
+   *
+   * @param {string} hex the Hexadecimal String input color
+   * 
+   * @return {Vec4} the RGBA equivalent
+   */
+  static HexToRgba(hex) {
+    // Remove # at the begin (if exists)
+    hex = hex.substring(hex.indexOf("#") + 1);
+  
+    // Ensure hex string is of size 8
+    if (hex.length != 8) throw new Error("Unsupported format");
+  
+    // Parse value
+    const bigint = parseInt(hex, 16);
+  
+    // Extract components
+    const r = (bigint >> 24) & 0xFF;
+    const g = (bigint >> 16) & 0xFF;
+    const b = (bigint >>  8) & 0xFF;
+    const a = (bigint >>  0) & 0xFF;
+
+    // Return result
+    return new Vec4(r, g, b, a).div(255);
   }
 }
