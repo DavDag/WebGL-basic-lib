@@ -1,3 +1,5 @@
+/** @author: Davide Risaliti davdag24@gmail.com */
+
 import {Shader, Program} from "webgl-basic-lib";
 
 const VSOURCE1 = 

@@ -1,3 +1,5 @@
+/** @author: Davide Risaliti davdag24@gmail.com */
+
 import {Program, Mat4, Vec2, Vec3, Vec4, toRad} from "webgl-basic-lib";
 
 import {programs} from "./shaders.js";
