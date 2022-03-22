@@ -193,7 +193,7 @@ test("Mat4 LookAt", () => {
   const expected = [-0.71, -0.58, -0.41, 0, 0, 0.58, -0.82, 0, 0.71, -0.58, -0.41, 0, -1.41, 1.15, 0.82, 1];
 	expect(global.CmpMatToArr(mat, expected)).toBe(true);
   const tmp = Mat4.LookAt(Vec3.Zeros(), Vec3.Zeros(), Vec3.Zeros());
-	expect(global.CmpMatToArr(tmp, Mat4.Identity())).toBe(true);
+	expect(global.CmpMatToMat(tmp, Mat4.Identity())).toBe(true);
 });
 
 test("Mat4 Perspective", () => {

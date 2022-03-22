@@ -25,7 +25,12 @@ function MatArrCompare (mat, arr) {
     return MatF32ArrCompare(mat, new Float32Array(arr));
 }
 
+function MatMatCompare (mat1, mat2) {
+    return ArrArrCompare(mat1.values, mat2.values);
+}
+
 global.CmpArrToArr = ArrArrCompare;
 global.CmpVecToArr = VecArrCompare;
 global.CmpVecToVec = VecVecCompare;
 global.CmpMatToArr = MatArrCompare;
+global.CmpMatToMat = MatMatCompare;
