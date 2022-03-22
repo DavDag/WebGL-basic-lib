@@ -1,11 +1,12 @@
-import {RetrieveWebGLContext, SetOnClickHandler} from "webgl-basic-lib";
+import {RetrieveWebGLContext, SetOnClickHandler, SetKeyboardListener} from "webgl-basic-lib";
 
-import {main, handler} from "./main.js";
+import {main, mouseHandler, keyboardHandler} from "./main.js";
 
 function onload() {
   try {
     const gl = RetrieveWebGLContext("main-canvas");
-    SetOnClickHandler("main-canvas", handler);
+    SetOnClickHandler("main-canvas", mouseHandler);
+    SetKeyboardListener("main-canvas", keyboardHandler);
     main(gl);
   } catch (e) {
     console.error(e);

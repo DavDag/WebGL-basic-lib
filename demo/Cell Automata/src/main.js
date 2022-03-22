@@ -3,7 +3,47 @@ import {Program, Mat4, Vec2, Vec3, Vec4, toRad} from "webgl-basic-lib";
 import {programs} from "./shaders.js";
 
 const S = 512;
-const N = 32;
+const N = 256;
+
+var isRunning = true;
+var gl = null;
+var textDiv = null;
+
+const quad = {
+  v: new Float32Array([
+    -1, -1, 0, 1,
+    -1,  1, 0, 0,
+     1, -1, 1, 1,
+     1,  1, 1, 0,
+  ]),
+  i: new Uint8Array([
+    0, 1, 2,
+    1, 2, 3
+  ]),
+};
+
+function mmap(v) {
+  const tmp = v.clone();
+  tmp.div(S / 2).add(Vec2.All(-1));
+  tmp.y *= -1;
+  return tmp.toVec4(0, 1).transform(camera.inv()).toVec2();
+}
+
+function grid(v) {
+  const tmp = v.clone();
+  tmp.add(Vec2.All(1)).div(2).mul(N).floor();
+  tmp.y = Math.min(Math.max(tmp.y, 0), N-1);
+  tmp.x = Math.min(Math.max(tmp.x, 0), N-1);
+  return tmp;
+}
+
+function bbox (v) {
+  const tmp = v.clone();
+  return (
+       tmp.x <= 1 && tmp.x >= -1
+    && tmp.y <= 1 && tmp.y >= -1
+  );
+}
 
 const camera = {
   mat: null,
@@ -33,56 +73,31 @@ const camera = {
     this.updated = false;
     this.pos.add(delta);
   },
-  updateZoom: function (delta) {
+  updateZoom: function (delta, pos) {
     this.updated = false;
-    this.zoom += delta;
-    this.zoom = Math.min(Math.max(0.125, this.zoom), 2.0);
+    const lastZoom = this.zoom;
+    this.zoom *= Math.pow(Math.pow(2, 0.5), delta);
+    this.zoom = Math.min(Math.max(0.5, this.zoom), (N / S) / (16 / S));
+    const factor = this.zoom / lastZoom;
+    pos.div(S / 2).add(Vec2.All(-1));
+    pos.y *= -1;
+    this.pos.x = pos.x - (pos.x - this.pos.x) * factor;
+    this.pos.y = pos.y - (pos.y - this.pos.y) * factor;
   },
 };
 
-const quad = {
-  v: new Float32Array([
-    -1, -1, 0, 1,
-    -1,  1, 0, 0,
-     1, -1, 1, 1,
-     1,  1, 1, 0,
-  ]),
-  i: new Uint8Array([
-    0, 1, 2,
-    1, 2, 3
-  ]),
-};
-
-export const handler = {
+export const mouseHandler = {
   isDragging: false,
   isDrawing: false,
   lastPos: null,
   lastCell: null,
-  mmap: (v) => {
-    const tmp = v.clone();
-    tmp.div(S / 2).add(Vec2.All(-1));
-    tmp.y *= -1;
-    return tmp.toVec4(0, 1).transform(camera.inv()).toVec2();
-  },
-  grid: (v) => {
-    const tmp = v.clone();
-    // tmp.y *= -1;
-    return tmp.add(Vec2.All(1)).div(2).mul(N).floor();
-  },
-  bbox: function (v) {
-    const tmp = v.clone();
-    return (
-         tmp.x <= 1 && tmp.x >= -1
-      && tmp.y <= 1 && tmp.y >= -1
-    );
-  },
   onMouseDown: function (event, pos) {
     // Left
     if (event.button == 0) {
-      const tmp = this.mmap(pos);
-      if (this.bbox(tmp)) {
+      const tmp = mmap(pos);
+      if (bbox(tmp)) {
         this.isDrawing = true;
-        const cell = this.grid(tmp);
+        const cell = grid(tmp);
         this.lastCell = cell.clone();
       }
     }
@@ -100,9 +115,9 @@ export const handler = {
       camera.updatePos(delta);
     }
     if (this.isDrawing) {
-      const tmp = this.mmap(pos);
-      if (this.bbox(tmp)) {
-        const cell = this.grid(tmp);
+      const tmp = mmap(pos);
+      if (bbox(tmp)) {
+        const cell = grid(tmp);
         this.lastCell = cell.clone();
         updateTexture(this.lastCell);
       }
@@ -112,15 +127,21 @@ export const handler = {
     // Left
     if (event.button == 0) {
       this.isDrawing = false;
+      const tmp = mmap(pos);
+      if (bbox(tmp)) {
+        const cell = grid(tmp);
+        this.lastCell = cell.clone();
+        updateTexture(this.lastCell);
+      }
     }
     // Middle
     if (event.button == 1) {
       this.isDragging = false;
     }
   },
-  onMouseWheel: function (event) {
-    const delta = event.deltaY * -0.001;
-    camera.updateZoom(delta);
+  onMouseWheel: function (event, pos) {
+    const delta = (event.deltaY / 100) * -1;
+    camera.updateZoom(delta, pos);
   },
   onMouseOut: function (event) {
     this.isDragging = false;
@@ -128,7 +149,22 @@ export const handler = {
   }
 };
 
-var gl = null;
+export const keyboardHandler = {
+  OnKeyDown: function (event) {
+
+  },
+  OnKeyUp: function (event) {
+    if (event.code == "Space") {
+      isRunning = !isRunning;
+      if (isRunning) {
+        textDiv.innerText = "Press \"Space\" to Pause/Resume simulation";
+      } else {
+        textDiv.innerText = "Paused";
+      }
+    }
+  }
+}
+
 
 const texture = {
   idA: null,
@@ -164,17 +200,15 @@ const texture = {
   }
 }
 
+const cellsToUpdate = [];
 function updateTexture(cell) {
-  const pixels = new Uint8Array([255, 255, 255, 255]);
-  gl.bindTexture(gl.TEXTURE_2D, texture.curr());
-  gl.texSubImage2D(gl.TEXTURE_2D, 0, cell.x, cell.y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-  gl.bindTexture(gl.TEXTURE_2D, null);
-  gl.bindTexture(gl.TEXTURE_2D, texture.next());
-  gl.texSubImage2D(gl.TEXTURE_2D, 0, cell.x, cell.y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-  gl.bindTexture(gl.TEXTURE_2D, null);
+  cellsToUpdate.push(cell);
+  // console.log("Added: ", cell.toString(0));
 }
 
 export function main(ctx) {
+  textDiv = document.getElementById("overlay-text");
+
   gl = ctx;
   
   const [simProgram, resProgram] = programs(gl);
@@ -187,6 +221,7 @@ export function main(ctx) {
     ["aTex", 2, gl.FLOAT, 16, 8]
   ]);
   simProgram.declareUniforms([
+    ["uMatrix", "Matrix4fv"],
     ["uSize", "1f"],
     ["uTexture", "1i"],
   ]);
@@ -216,7 +251,21 @@ export function main(ctx) {
   Program.unbind(gl);
 
   function draw() {
-    {
+    if (cellsToUpdate.length > 0) {      
+      const pixels = new Uint8Array([255, 255, 255, 255]);
+      gl.bindTexture(gl.TEXTURE_2D, texture.curr());
+      cellsToUpdate.forEach((cell) => {
+        gl.texSubImage2D(gl.TEXTURE_2D, 0, cell.x, cell.y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+      })
+      gl.bindTexture(gl.TEXTURE_2D, null);
+      gl.bindTexture(gl.TEXTURE_2D, texture.next());
+      cellsToUpdate.forEach((cell) => {
+        gl.texSubImage2D(gl.TEXTURE_2D, 0, cell.x, cell.y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+      })
+      gl.bindTexture(gl.TEXTURE_2D, null);
+      cellsToUpdate.splice(0, cellsToUpdate.length);
+    }
+    if (isRunning) {
       gl.viewport(0, 0, N, N);
       
       gl.clearColor(0, 0, 0, 1);
@@ -229,6 +278,11 @@ export function main(ctx) {
       gl.bindBuffer(gl.ARRAY_BUFFER, vba);
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, vbo);
       simProgram.use();
+
+      const mat = Mat4.Identity();
+      mat.scale(new Vec3(1, -1, 1));
+
+      simProgram.uMatrix.update(mat.values);
       simProgram.uTexture.update(texture.curr());
       simProgram.enableAttributes();
       
@@ -241,8 +295,9 @@ export function main(ctx) {
       
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       gl.bindTexture(gl.TEXTURE_2D, null);
+
+      texture.swap();
     }
-    texture.swap();
     {
       gl.viewport(0, 0, S, S);
 
@@ -257,7 +312,11 @@ export function main(ctx) {
       resProgram.use();
       resProgram.uTexture.update(texture.curr());
       
-      resProgram.uMatrix.update(camera.curr().values);
+      const mat = Mat4.Identity();
+      mat.apply(camera.curr());
+      mat.scale(new Vec3(1, -1, 1));
+
+      resProgram.uMatrix.update(mat.values);
       resProgram.enableAttributes();
       
       gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_BYTE, 0);
@@ -281,5 +340,5 @@ export function main(ctx) {
         clearInterval(interval);
       }
     });
-  }, 250);
+  }, 30);
 }
