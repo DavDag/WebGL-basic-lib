@@ -3,6 +3,18 @@
 import {expect, test} from '@jest/globals';
 import {Colors, Vec3, Vec4} from "lib/all.js";
 
+test("Colors Built-ins", () => {
+  expect(global.CmpVecToVec(Colors.Red,    new Vec3(1.0, 0.0, 0.0))).toBe(true);
+  expect(global.CmpVecToVec(Colors.Green,  new Vec3(0.0, 1.0, 0.0))).toBe(true);
+  expect(global.CmpVecToVec(Colors.Blue,   new Vec3(0.0, 0.0, 1.0))).toBe(true);
+  expect(global.CmpVecToVec(Colors.White,  new Vec3(1.0, 1.0, 1.0))).toBe(true);
+  expect(global.CmpVecToVec(Colors.Gray,   new Vec3(0.5, 0.5, 0.5))).toBe(true);
+  expect(global.CmpVecToVec(Colors.Black,  new Vec3(0.0, 0.0, 0.0))).toBe(true);
+  expect(global.CmpVecToVec(Colors.Cyan,   new Vec3(0.0, 1.0, 1.0))).toBe(true);
+  expect(global.CmpVecToVec(Colors.Pink,   new Vec3(1.0, 0.0, 1.0))).toBe(true);
+  expect(global.CmpVecToVec(Colors.Yellow, new Vec3(1.0, 1.0, 0.0))).toBe(true);
+});
+
 const a = [
   // Single channel
   [[255,   0,   0], [  0, 100, 100]],
@@ -28,7 +40,7 @@ const aa = a.map(([[r, g, b], [h, s, v]]) => {
   return [vRgb, vHsv];
 });
 
-test("RgbToHsv", () => {
+test("Colors RgbToHsv", () => {
   aa.forEach(([rgb, hsv], ind) => {
     expect(global.CmpVecToVec(
       Colors.RgbToHsv(rgb).round(2),
@@ -37,7 +49,7 @@ test("RgbToHsv", () => {
   });
 });
 
-test("HsvToRgb", () => {
+test("Colors HsvToRgb", () => {
   aa.forEach(([rgb, hsv], ind) => {
     expect(global.CmpVecToVec(
       Colors.HsvToRgb(hsv).round(2),
@@ -62,7 +74,7 @@ const b = [
   ["#3D2F36", [ 61,  47,  54]],
 ];
 
-test("HexToRgb", () => {
+test("Colors HexToRgb", () => {
   b.forEach(([hex, [r, g, b]]) => {
     const rgb = new Vec3(r, g, b).div(255);
     const expected = Colors.HexToRgb(hex);
@@ -86,7 +98,7 @@ const c = [
   ["#3D2F360C", [ 61,  47,  54,  12]],
 ];
 
-test("HexToRgba", () => {
+test("Colors HexToRgba", () => {
   c.forEach(([hex, [r, g, b, a]]) => {
     const rgb = new Vec4(r, g, b, a).div(255);
     const expected = Colors.HexToRgba(hex);
