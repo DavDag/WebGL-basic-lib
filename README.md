@@ -4,3 +4,13 @@
 
 Simple and expressive utility lib that aims at keeping WebGL at "low level" while improving the syntax.
 Written for didactic purposes.
+
+# Installation
+
+## Npm
+```
+npm install webgl-basic-lib
+```
+
+## jsDelivr
+https://cdn.jsdelivr.net/npm/webgl-basic-lib@0.3.0/lib/all.min.js
