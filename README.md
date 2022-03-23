@@ -13,4 +13,4 @@ npm install webgl-basic-lib
 ```
 
 ## jsDelivr
-https://cdn.jsdelivr.net/npm/webgl-basic-lib@0.3.0/lib/all.min.js
+https://cdn.jsdelivr.net/npm/webgl-basic-lib@latest/lib/extra/camera.js
