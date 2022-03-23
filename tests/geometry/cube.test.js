@@ -6,8 +6,8 @@ import {Cube} from "lib/all.js";
 test("Cube BasicShape", () => {
   const N = 1;
   const cube = Cube.asBasicShape(N);
-  expect(cube).toHaveProperty("verteces");
-  expect(cube).toHaveProperty("numVerteces");
+  expect(cube).toHaveProperty("vertexes");
+  expect(cube).toHaveProperty("numVertexes");
   expect(cube).toHaveProperty("triangles");
   expect(cube).toHaveProperty("numTriangles");
   expect(cube).not.toHaveProperty("lines");
@@ -17,8 +17,8 @@ test("Cube BasicShape", () => {
 test("Cube TexturedShape", () => {
   const N = 5;
   const cube = Cube.asTexturedShape(N);
-  expect(cube).toHaveProperty("verteces");
-  expect(cube).toHaveProperty("numVerteces");
+  expect(cube).toHaveProperty("vertexes");
+  expect(cube).toHaveProperty("numVertexes");
   expect(cube).toHaveProperty("triangles");
   expect(cube).toHaveProperty("numTriangles");
   expect(cube).not.toHaveProperty("lines");
@@ -28,8 +28,8 @@ test("Cube TexturedShape", () => {
 test("Cube DebugShape", () => {
   const N = 10;
   const cube = Cube.asDebugShape(N);
-  expect(cube).toHaveProperty("verteces");
-  expect(cube).toHaveProperty("numVerteces");
+  expect(cube).toHaveProperty("vertexes");
+  expect(cube).toHaveProperty("numVertexes");
   expect(cube).toHaveProperty("triangles");
   expect(cube).toHaveProperty("numTriangles");
   expect(cube).toHaveProperty("lines");

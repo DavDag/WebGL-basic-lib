@@ -6,8 +6,8 @@ import {Icosahedron} from "lib/all.js";
 test("Icosahedron BasicShape", () => {
   const N = 0;
   const icosahedron = Icosahedron.asBasicShape(N, N);
-  expect(icosahedron).toHaveProperty("verteces");
-  expect(icosahedron).toHaveProperty("numVerteces");
+  expect(icosahedron).toHaveProperty("vertexes");
+  expect(icosahedron).toHaveProperty("numVertexes");
   expect(icosahedron).toHaveProperty("triangles");
   expect(icosahedron).toHaveProperty("numTriangles");
   expect(icosahedron).not.toHaveProperty("lines");
@@ -17,8 +17,8 @@ test("Icosahedron BasicShape", () => {
 test("Icosahedron TexturedShape", () => {
   const N = 1;
   const icosahedron = Icosahedron.asTexturedShape(N, N);
-  expect(icosahedron).toHaveProperty("verteces");
-  expect(icosahedron).toHaveProperty("numVerteces");
+  expect(icosahedron).toHaveProperty("vertexes");
+  expect(icosahedron).toHaveProperty("numVertexes");
   expect(icosahedron).toHaveProperty("triangles");
   expect(icosahedron).toHaveProperty("numTriangles");
   expect(icosahedron).not.toHaveProperty("lines");
@@ -28,8 +28,8 @@ test("Icosahedron TexturedShape", () => {
 test("Icosahedron DebugShape", () => {
   const N = 2;
   const icosahedron = Icosahedron.asDebugShape(N, N);
-  expect(icosahedron).toHaveProperty("verteces");
-  expect(icosahedron).toHaveProperty("numVerteces");
+  expect(icosahedron).toHaveProperty("vertexes");
+  expect(icosahedron).toHaveProperty("numVertexes");
   expect(icosahedron).toHaveProperty("triangles");
   expect(icosahedron).toHaveProperty("numTriangles");
   expect(icosahedron).toHaveProperty("lines");

@@ -157,7 +157,7 @@ export class App {
       // Array buffer (ab)
       const ab = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, ab);
-      gl.bufferData(gl.ARRAY_BUFFER, obj.verteces, gl.STATIC_DRAW);
+      gl.bufferData(gl.ARRAY_BUFFER, obj.vertexes, gl.STATIC_DRAW);
       gl.bindBuffer(gl.ARRAY_BUFFER, null);
     
       // Element array buffer (eab)
@@ -175,85 +175,6 @@ export class App {
 
     // Objects
     const objects = [];
-
-    /*
-    objects.push(
-      {
-        ...buffers[0],
-        mat: mat(new Vec3(-5, 0, 0), Vec3.Ones()),
-        childs: [
-          {
-            ...buffers[3],
-            mat: mat(new Vec3(0, 2, 2), Vec3.Ones().div(2)),
-            childs: [
-              {
-                ...buffers[5],
-                mat: mat(new Vec3(0, 2, -2), Vec3.Ones().div(2))
-              },
-              {
-                ...buffers[3],
-                mat: mat(new Vec3(2, 2, -2), Vec3.Ones().div(3))
-              }
-            ]
-          },
-          {
-            ...buffers[4],
-            mat: mat(new Vec3(0, -2, 2), Vec3.Ones().div(3))
-          }
-        ]
-      },
-      {
-        ...buffers[1],
-        mat: mat(new Vec3(0, 0, 0), Vec3.Ones()),
-        childs: [
-          {
-            ...buffers[4],
-            mat: mat(new Vec3(2, 0, 0), Vec3.Ones().div(2))
-          },
-          {
-            ...buffers[5],
-            mat: mat(new Vec3(-2, 0, 0), Vec3.Ones().div(3))
-          },
-          {
-            ...buffers[5],
-            mat: mat(new Vec3(-2, 2, 2), Vec3.Ones().div(3))
-          }
-        ]
-      },
-      {
-        ...buffers[2],
-        mat: mat(new Vec3(5, 0, 0), Vec3.Ones()),
-        childs: [
-          {
-            ...buffers[5],
-            mat: mat(new Vec3(0, 2, 2), Vec3.Ones().div(2))
-          },
-          {
-            ...buffers[3],
-            mat: mat(new Vec3(0, -2, 2), Vec3.Ones().div(3))
-          },
-          {
-            ...buffers[3],
-            mat: mat(new Vec3(0, -2, -2), Vec3.Ones().div(4)),
-            childs: [
-              {
-                ...buffers[4],
-                mat: mat(new Vec3(2, 0, 0), Vec3.Ones().div(2))
-              },
-              {
-                ...buffers[5],
-                mat: mat(new Vec3(-2, 0, 0), Vec3.Ones().div(3))
-              },
-              {
-                ...buffers[5],
-                mat: mat(new Vec3(-2, 2, 0), Vec3.Ones().div(3))
-              }
-            ]
-          }
-        ]
-      }
-    );
-    */
 
     const B = 6;
     const N = 10;
@@ -316,8 +237,8 @@ export class App {
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
       // Debug
-      Debug.drawLines(ref.verteces, ref.lines, ref.vertexSize(), curr, ref.numLines, Colors.Black.toVec4(1));
-      Debug.drawPoints(ref.verteces, ref.vertexSize(), curr, ref.numVerteces, Colors.White.toVec4(1), 2.5);
+      Debug.drawLines(ref.vertexes, ref.lines, ref.vertexSize(), curr, ref.numLines, Colors.Black.toVec4(1));
+      Debug.drawPoints(ref.vertexes, ref.vertexSize(), curr, ref.numVertexes, Colors.White.toVec4(1), 2.5);
 
       // Ricursive draw childs
       if (obj.childs) obj.childs.forEach((child) => drawObj(child, iter + 1));
