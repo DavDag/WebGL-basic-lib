@@ -289,7 +289,7 @@ export class App {
       col: Colors.Random(),
       shininess: LOW_SHININESS,
       update: function(dt) {
-        this.mat.rotate(toRad(30 * dt), new Vec3(0, 1, 0));
+        this.mat.rotate(toRad(30 * dt), new Vec3(0, 1, 1).normalize());
       }
     };
     const cube2 = {
@@ -304,7 +304,7 @@ export class App {
       col: Colors.Random(),
       shininess: HIGH_SHININESS,
       update: function(dt) {
-        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 0));
+        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 1).normalize());
       }
     };
     const cube3 = {
@@ -319,7 +319,7 @@ export class App {
       col: Colors.Random(),
       shininess: LOW_SHININESS,
       update: function(dt) {
-        this.mat.rotate(toRad(30 * dt), new Vec3(0, 1, 0));
+        this.mat.rotate(toRad(30 * dt), new Vec3(0, 1, 1).normalize());
       }
     };
     const cube4 = {
@@ -334,17 +334,17 @@ export class App {
       col: Colors.Random(),
       shininess: HIGH_SHININESS,
       update: function(dt) {
-        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 0));
+        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 1).normalize());
       }
     };
 
-    const rawCylinder4 = Cylinder.asDebugShape(4);
-    const rawCylinder4Buffers = this.#createBuffers(rawCylinder4.vertexes, rawCylinder4.triangles);
+    const rawCylinder6 = Cylinder.asDebugShape(6);
+    const rawCylinder6Buffers = this.#createBuffers(rawCylinder6.vertexes, rawCylinder6.triangles);
     const rawCylinder12 = Cylinder.asDebugShape(12);
     const rawCylinder12Buffers = this.#createBuffers(rawCylinder12.vertexes, rawCylinder12.triangles);
     const cylinder1 = {
-      ...rawCylinder4Buffers,
-      ref: rawCylinder4,
+      ...rawCylinder6Buffers,
+      ref: rawCylinder6,
       drawMode: "TRIANGLES",
       mat: Mat4.Identity()
         .translate(new Vec3(-0.25, 0, -0.25))
@@ -354,12 +354,12 @@ export class App {
       col: Colors.Random(),
       shininess: LOW_SHININESS,
       update: function(dt) {
-        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 0));
+        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 1).normalize());
       }
     };
     const cylinder2 = {
-      ...rawCylinder4Buffers,
-      ref: rawCylinder4,
+      ...rawCylinder6Buffers,
+      ref: rawCylinder6,
       drawMode: "TRIANGLES",
       mat: Mat4.Identity()
         .translate(new Vec3(-0.75, 0, -0.25))
@@ -369,7 +369,7 @@ export class App {
       col: Colors.Random(),
       shininess: HIGH_SHININESS,
       update: function(dt) {
-        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 0));
+        this.mat.rotate(toRad(30 * dt), new Vec3(0, 1, 1).normalize());
       }
     };
     const cylinder3 = {
@@ -384,7 +384,7 @@ export class App {
       col: Colors.Random(),
       shininess: LOW_SHININESS,
       update: function(dt) {
-        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 0));
+        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 1).normalize());
       }
     };
     const cylinder4 = {
@@ -399,7 +399,7 @@ export class App {
       col: Colors.Random(),
       shininess: HIGH_SHININESS,
       update: function(dt) {
-        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 0));
+        this.mat.rotate(toRad(30 * dt), new Vec3(0, 1, 1).normalize());
       }
     };
 
@@ -419,7 +419,7 @@ export class App {
       col: Colors.Random(),
       shininess: LOW_SHININESS,
       update: function(dt) {
-        this.mat.rotate(toRad(30 * dt), new Vec3(0, 1, 0));
+        this.mat.rotate(toRad(30 * dt), new Vec3(0, 1, 1).normalize());
       }
     };
     const sphere2 = {
@@ -434,7 +434,7 @@ export class App {
       col: Colors.Random(),
       shininess: HIGH_SHININESS,
       update: function(dt) {
-        this.mat.rotate(toRad(30 * dt), new Vec3(0, 1, 0));
+        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 1).normalize());
       }
     };
     const sphere3 = {
@@ -449,7 +449,7 @@ export class App {
       col: Colors.Random(),
       shininess: LOW_SHININESS,
       update: function(dt) {
-        this.mat.rotate(toRad(30 * dt), new Vec3(0, 1, 0));
+        this.mat.rotate(toRad(30 * dt), new Vec3(0, 1, 1).normalize());
       }
     };
     const sphere4 = {
@@ -464,7 +464,7 @@ export class App {
       col: Colors.Random(),
       shininess: HIGH_SHININESS,
       update: function(dt) {
-        this.mat.rotate(toRad(30 * dt), new Vec3(0, 1, 0));
+        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 1).normalize());
       }
     };
 
@@ -484,7 +484,7 @@ export class App {
       col: Colors.Random(),
       shininess: LOW_SHININESS,
       update: function(dt) {
-        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 0));
+        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 1).normalize());
       }
     };
     const icosahedron2 = {
@@ -499,7 +499,7 @@ export class App {
       col: Colors.Random(),
       shininess: HIGH_SHININESS,
       update: function(dt) {
-        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 0));
+        this.mat.rotate(toRad(30 * dt), new Vec3(0, 1, 1).normalize());
       }
     };
     const icosahedron3 = {
@@ -514,7 +514,7 @@ export class App {
       col: Colors.Random(),
       shininess: LOW_SHININESS,
       update: function(dt) {
-        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 0));
+        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 1).normalize());
       }
     };
     const icosahedron4 = {
@@ -529,7 +529,7 @@ export class App {
       col: Colors.Random(),
       shininess: HIGH_SHININESS,
       update: function(dt) {
-        this.mat.rotate(toRad(45 * dt), new Vec3(0, 1, 0));
+        this.mat.rotate(toRad(30 * dt), new Vec3(0, 1, 1).normalize());
       }
     };
 
