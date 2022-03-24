@@ -61,4 +61,12 @@ test("Camera Setter", () => {
   expect(camera.isDirty()).toBe(true);
   camera.update();
   expect(camera.isDirty()).toBe(false);
+  camera.position = new Vec3(0, 1, 0);
+  expect(camera.isDirty()).toBe(true);
+  camera.update();
+  expect(camera.isDirty()).toBe(false);
+  camera.target = new Vec3(0, 1, 0);
+  expect(camera.isDirty()).toBe(true);
+  camera.update();
+  expect(camera.isDirty()).toBe(false);
 });

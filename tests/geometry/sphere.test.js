@@ -25,8 +25,19 @@ test("Sphere TexturedShape", () => {
   expect(sphere).not.toHaveProperty("numLines");
 });
 
-test("Sphere DebugShape", () => {
+test("Sphere AdvancedShape", () => {
   const N = 5;
+  const sphere = Sphere.asAdvancedShape(N, N);
+  expect(sphere).toHaveProperty("vertexes");
+  expect(sphere).toHaveProperty("numVertexes");
+  expect(sphere).toHaveProperty("triangles");
+  expect(sphere).toHaveProperty("numTriangles");
+  expect(sphere).not.toHaveProperty("lines");
+  expect(sphere).not.toHaveProperty("numLines");
+});
+
+test("Sphere DebugShape", () => {
+  const N = 6;
   const sphere = Sphere.asDebugShape(N, N);
   expect(sphere).toHaveProperty("vertexes");
   expect(sphere).toHaveProperty("numVertexes");

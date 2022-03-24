@@ -1,7 +1,7 @@
 /** @author: Davide Risaliti davdag24@gmail.com */
 
 import {expect, test} from '@jest/globals';
-import {Shape, BasicShape, TexturedShape, DebugShape} from 'lib/all.js';
+import {Shape, BasicShape, TexturedShape, DebugShape, AdvancedShape} from 'lib/all.js';
 import {Vec2, Vec3, Vec4} from "lib/all.js";
 
 test("BasicShape VertexSize", () => {
@@ -10,6 +10,10 @@ test("BasicShape VertexSize", () => {
 
 test("TexturedShape VertexSize", () => {
   expect(TexturedShape.VertexSize()).toBe(5);
+});
+
+test("AdvancedShape VertexSize", () => {
+  expect(AdvancedShape.VertexSize()).toBe(8);
 });
 
 test("DebugShape VertexSize", () => {

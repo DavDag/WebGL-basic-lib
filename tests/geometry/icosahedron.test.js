@@ -25,8 +25,19 @@ test("Icosahedron TexturedShape", () => {
   expect(icosahedron).not.toHaveProperty("numLines");
 });
 
-test("Icosahedron DebugShape", () => {
+test("Icosahedron AdvancedShape", () => {
   const N = 2;
+  const icosahedron = Icosahedron.asAdvancedShape(N, N);
+  expect(icosahedron).toHaveProperty("vertexes");
+  expect(icosahedron).toHaveProperty("numVertexes");
+  expect(icosahedron).toHaveProperty("triangles");
+  expect(icosahedron).toHaveProperty("numTriangles");
+  expect(icosahedron).not.toHaveProperty("lines");
+  expect(icosahedron).not.toHaveProperty("numLines");
+});
+
+test("Icosahedron DebugShape", () => {
+  const N = 3;
   const icosahedron = Icosahedron.asDebugShape(N, N);
   expect(icosahedron).toHaveProperty("vertexes");
   expect(icosahedron).toHaveProperty("numVertexes");

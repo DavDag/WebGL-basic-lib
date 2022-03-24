@@ -4,7 +4,7 @@ import {expect, test} from '@jest/globals';
 import {Cylinder} from "lib/all.js";
 
 test("Cylinder BasicShape", () => {
-  const N = 0;
+  const N = 4;
   const cylinder = Cylinder.asBasicShape(N, N);
   expect(cylinder).toHaveProperty("vertexes");
   expect(cylinder).toHaveProperty("numVertexes");
@@ -15,7 +15,7 @@ test("Cylinder BasicShape", () => {
 });
 
 test("Cylinder TexturedShape", () => {
-  const N = 1;
+  const N = 5;
   const cylinder = Cylinder.asTexturedShape(N, N);
   expect(cylinder).toHaveProperty("vertexes");
   expect(cylinder).toHaveProperty("numVertexes");
@@ -25,8 +25,19 @@ test("Cylinder TexturedShape", () => {
   expect(cylinder).not.toHaveProperty("numLines");
 });
 
+test("Cylinder AdvancedShape", () => {
+  const N = 6;
+  const cylinder = Cylinder.asAdvancedShape(N, N);
+  expect(cylinder).toHaveProperty("vertexes");
+  expect(cylinder).toHaveProperty("numVertexes");
+  expect(cylinder).toHaveProperty("triangles");
+  expect(cylinder).toHaveProperty("numTriangles");
+  expect(cylinder).not.toHaveProperty("lines");
+  expect(cylinder).not.toHaveProperty("numLines");
+});
+
 test("Cylinder DebugShape", () => {
-  const N = 2;
+  const N = 7;
   const cylinder = Cylinder.asDebugShape(N, N);
   expect(cylinder).toHaveProperty("vertexes");
   expect(cylinder).toHaveProperty("numVertexes");

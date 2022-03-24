@@ -106,7 +106,7 @@ export class App {
   ctx=null;
   program=null;
   objects=null;
-  camera=new Camera(45, 1.0, 1, 100, new Vec3(0, 3, 2), new Vec3(0, -1.5, -1).normalize(), new Vec3(0, 1, 0));
+  camera=new Camera(45, 1.0, 1, 100, new Vec3(0, 3, 2), new Vec3(0, -1.5, -1).normalize(), new Vec3(0, 1, 0), false);
   stack=new MatrixStack();
   time=0;
 
