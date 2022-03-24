@@ -1,7 +1,7 @@
 # WebGL-basic-lib
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
-[![Node.js Package](https://github.com/DavDag/WebGL-basic-lib/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/DavDag/WebGL-basic-lib/actions/workflows/npm-publish.yml)
-[![NodeJS with Webpack](https://github.com/DavDag/WebGL-basic-lib/actions/workflows/webpack.yml/badge.svg)](https://github.com/DavDag/WebGL-basic-lib/actions/workflows/webpack.yml)
+[![Npm Package](https://github.com/DavDag/WebGL-basic-lib/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/DavDag/WebGL-basic-lib/actions/workflows/npm-publish.yml)
+[![Webpack](https://github.com/DavDag/WebGL-basic-lib/actions/workflows/webpack.yml/badge.svg)](https://github.com/DavDag/WebGL-basic-lib/actions/workflows/webpack.yml)
 [![npm version](https://badge.fury.io/js/webgl-basic-lib.svg)](https://badge.fury.io/js/webgl-basic-lib)
 ![](https://img.badgesize.io/DavDag/WebGL-basic-lib/main/dist/main.js.svg)
 
