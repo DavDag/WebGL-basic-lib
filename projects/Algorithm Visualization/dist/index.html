@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>WebGL Visualization Tool</title>
+    <link rel="stylesheet" href="index.css"></link>
+  </head>
+  <body>
+    <!--  -->
+    <div class="overlay" style="display: flex; flex-direction: column;">
+      <!--  -->
+      <div style="display: flex; align-items: center;">
+        <button id="sim-start">Start</button>
+        <button id="sim-clear">Clear</button>
+        <button id="sim-reset">Reset</button>
+
+        <!--  -->
+        <div>Algorithm:
+          <select id="algo-selection">
+            <option value="bfs" selected>BFS</option>
+            <option value="dfs">DFS</option>
+          </select>
+        </div>
+        
+        <!--  -->
+        <div>Speedup:
+          <select id="algo-speedup">
+            <option value="0.25">25%</option>
+            <option value="0.5">50%</option>
+            <option value="1.0" selected>100%</option>
+            <option value="2.5">250%</option>
+            <option value="5.0">500%</option>
+            <option value="0.0">As fast as possible</option>
+          </select>
+        </div>
+        
+        <!--  -->
+        <div>Theme:
+          <select id="theme-selection">
+            <option value="0">Brown</option>
+            <option value="1" selected> Green</option>
+            <option value="2">Pink</option>
+          </select>
+        </div>
+      </div>
+      
+      <!--  -->      
+      <div tabindex="-1" id="hide-on-tab" class="no-pointer-events" hidden>
+        <div>FPS: <span id="fpsText"></span></div>
+        <div>Screen Size: <span id="screenSizeText"></span></div>
+        <div>Cell Size: <span id="cellSizeText"></span></div>
+        <div>Cell Count: <span id="cellCountText"></span></div>
+      </div>
+    </div>
+    
+    <!--  -->      
+    <div style="margin-top: 32px;">
+      <canvas id="main-canvas"></canvas>
+    </div>
+    
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
