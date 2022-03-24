@@ -27,13 +27,25 @@ test("Camera Constructor", () => {
   });
 });
 
-test("Camera Move", () => {
+test("Camera MovePos", () => {
   const [[fov, ratio, near, far], [pos, dir, up], perspective, lookat] = aa[0];
   const camera = new Camera(fov, ratio, near, far, pos, dir, up);
   expect(camera.isDirty()).toBe(true);
   camera.update();
   expect(camera.isDirty()).toBe(false);
-  camera.move(Vec3.Zeros());
+  camera.movePos(Vec3.Zeros());
+  expect(camera.isDirty()).toBe(true);
+  camera.update();
+  expect(camera.isDirty()).toBe(false);
+});
+
+test("Camera MoveDir", () => {
+  const [[fov, ratio, near, far], [pos, dir, up], perspective, lookat] = aa[0];
+  const camera = new Camera(fov, ratio, near, far, pos, dir, up);
+  expect(camera.isDirty()).toBe(true);
+  camera.update();
+  expect(camera.isDirty()).toBe(false);
+  camera.moveDir(Vec3.Zeros());
   expect(camera.isDirty()).toBe(true);
   camera.update();
   expect(camera.isDirty()).toBe(false);

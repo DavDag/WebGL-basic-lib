@@ -1,7 +1,7 @@
 /** @author: Davide Risaliti davdag24@gmail.com */
 
 import { expect, test } from '@jest/globals';
-import { Mat4, Vec3, Vec4, toRad } from "lib/all.js";
+import { Mat3, Mat4, Vec3, Vec4, toRad } from "lib/all.js";
 
 test("Mat4 Count", () => {
 	expect(Mat4.count()).toBe(16);
@@ -201,4 +201,15 @@ test("Mat4 Perspective", () => {
   mat.round(2);
   const expected = [2.41, 0, 0, 0, 0, 2.41, 0, 0, 0, 0, -1, -1, 0, 0, -0.20, 0];
 	expect(global.CmpMatToArr(mat, expected)).toBe(true);
+});
+
+test("Mat4 ToMat3", () => {
+	const mat = new Mat4(  0,  1,  2,  3,
+                         4,  5,  6,  7,
+                         8,  9, 10, 11,
+                        12, 13, 14, 15);
+  const expected = new Mat3( 0,  1,  2,
+                             4,  5,  6,
+                             8,  9, 10);
+	expect(global.CmpMatToMat(mat.toMat3(), expected)).toBe(true);
 });
