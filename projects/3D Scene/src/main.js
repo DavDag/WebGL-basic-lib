@@ -289,7 +289,7 @@ export class App {
       col: Colors.Random(),
       shininess: LOW_SHININESS,
       update: function(dt) {
-        this.mat.rotate(toRad(30 * dt), new Vec3(0, 1, 1).normalize());
+        // this.mat.rotate(toRad(30 * dt), new Vec3(0, 1, 1).normalize());
       }
     };
     const cube2 = {
@@ -414,7 +414,7 @@ export class App {
       mat: Mat4.Identity()
         .translate(new Vec3(0.25, 0, 0.25))
         .scale(Vec3.All(0.25))
-        .translate(new Vec3(0, 0, 0)),
+        .translate(new Vec3(0, 0.5, 0)),
       uMode: PHONG_COMPLETE,
       col: Colors.Random(),
       shininess: LOW_SHININESS,
@@ -429,7 +429,7 @@ export class App {
       mat: Mat4.Identity()
         .translate(new Vec3(0.75, 0, 0.25))
         .scale(Vec3.All(0.25))
-        .translate(new Vec3(0, 0, 0)),
+        .translate(new Vec3(0, 0.5, 0)),
       uMode: PHONG_COMPLETE,
       col: Colors.Random(),
       shininess: HIGH_SHININESS,
@@ -444,7 +444,7 @@ export class App {
       mat: Mat4.Identity()
         .translate(new Vec3(0.25, 0, 0.75))
         .scale(Vec3.All(0.25))
-        .translate(new Vec3(0, 0, 0)),
+        .translate(new Vec3(0, 0.5, 0)),
       uMode: PHONG_COMPLETE,
       col: Colors.Random(),
       shininess: LOW_SHININESS,
@@ -459,7 +459,7 @@ export class App {
       mat: Mat4.Identity()
         .translate(new Vec3(0.75, 0, 0.75))
         .scale(Vec3.All(0.25))
-        .translate(new Vec3(0, 0, 0)),
+        .translate(new Vec3(0, 0.5, 0)),
       uMode: PHONG_COMPLETE,
       col: Colors.Random(),
       shininess: HIGH_SHININESS,
@@ -479,7 +479,7 @@ export class App {
       mat: Mat4.Identity()
         .translate(new Vec3(-0.25, 0, 0.25))
         .scale(Vec3.All(0.25))
-        .translate(new Vec3(0, 0, 0)),
+        .translate(new Vec3(0, 0.5, 0)),
       uMode: PHONG_COMPLETE,
       col: Colors.Random(),
       shininess: LOW_SHININESS,
@@ -494,7 +494,7 @@ export class App {
       mat: Mat4.Identity()
         .translate(new Vec3(-0.75, 0, 0.25))
         .scale(Vec3.All(0.25))
-        .translate(new Vec3(0, 0, 0)),
+        .translate(new Vec3(0, 0.5, 0)),
       uMode: PHONG_COMPLETE,
       col: Colors.Random(),
       shininess: HIGH_SHININESS,
@@ -509,7 +509,7 @@ export class App {
       mat: Mat4.Identity()
         .translate(new Vec3(-0.25, 0, 0.75))
         .scale(Vec3.All(0.25))
-        .translate(new Vec3(0, 0, 0)),
+        .translate(new Vec3(0, 0.5, 0)),
       uMode: PHONG_COMPLETE,
       col: Colors.Random(),
       shininess: LOW_SHININESS,
@@ -524,7 +524,7 @@ export class App {
       mat: Mat4.Identity()
         .translate(new Vec3(-0.75, 0, 0.75))
         .scale(Vec3.All(0.25))
-        .translate(new Vec3(0, 0, 0)),
+        .translate(new Vec3(0, 0.5, 0)),
       uMode: PHONG_COMPLETE,
       col: Colors.Random(),
       shininess: HIGH_SHININESS,
@@ -588,9 +588,9 @@ export class App {
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.elembuff);
       this.program.enableAttributes();
       this.program.uMatrix.update(curr.values);
+      this.program.uModelMatrix.update(obj.mat.values);
       const normal = obj.mat.clone().inverse().transpose().toMat3();
       this.program.uNormalMatrix.update(normal.values);
-      this.program.uModelMatrix.update(obj.mat.values);
       this.program.uMode.update(obj.uMode);
       this.program.uColor.update(obj.col.values);
       this.program.uSpecPow.update(obj.shininess);
@@ -613,7 +613,7 @@ export class App {
     this.program.uLightCol.update(LIGHT_COLOR.values);
     this.program.uLightDir.update(LIGHT_DIRECTION.values);
     this.objects.forEach((obj) => drawObj(obj, 0));
-    Program.unbind(gl);
+    Program.Unbind(gl);
     
     // Pop camera matrix
     this.stack.pop();
@@ -634,7 +634,7 @@ export class App {
     console.log("App starting...");
     this.ctx = gl;
     this.#setup();
-    console.log("Setup done correctly:", this.objects);
+    console.log("Setup done correctly:", this);
     console.log("Left and Right columns have high shininess.");
     console.log("Central columns have low shininess.");
     console.log("Light direction is: ", LIGHT_DIRECTION.toString(2));

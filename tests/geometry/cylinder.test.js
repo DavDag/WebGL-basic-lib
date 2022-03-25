@@ -3,9 +3,11 @@
 import {expect, test} from '@jest/globals';
 import {Cylinder} from "lib/all.js";
 
+const N = 8;
+
 test("Cylinder BasicShape", () => {
-  const N = 4;
   const cylinder = Cylinder.asBasicShape(N, N);
+  expect(cylinder.name).toBe("Cylinder");
   expect(cylinder).toHaveProperty("vertexes");
   expect(cylinder).toHaveProperty("numVertexes");
   expect(cylinder).toHaveProperty("triangles");
@@ -15,8 +17,8 @@ test("Cylinder BasicShape", () => {
 });
 
 test("Cylinder TexturedShape", () => {
-  const N = 5;
   const cylinder = Cylinder.asTexturedShape(N, N);
+  expect(cylinder.name).toBe("Cylinder");
   expect(cylinder).toHaveProperty("vertexes");
   expect(cylinder).toHaveProperty("numVertexes");
   expect(cylinder).toHaveProperty("triangles");
@@ -26,8 +28,19 @@ test("Cylinder TexturedShape", () => {
 });
 
 test("Cylinder AdvancedShape", () => {
-  const N = 6;
   const cylinder = Cylinder.asAdvancedShape(N, N);
+  expect(cylinder.name).toBe("Cylinder");
+  expect(cylinder).toHaveProperty("vertexes");
+  expect(cylinder).toHaveProperty("numVertexes");
+  expect(cylinder).toHaveProperty("triangles");
+  expect(cylinder).toHaveProperty("numTriangles");
+  expect(cylinder).not.toHaveProperty("lines");
+  expect(cylinder).not.toHaveProperty("numLines");
+});
+
+test("Cylinder RealisticShape", () => {
+  const cylinder = Cylinder.asRealisticShape(N, N);
+  expect(cylinder.name).toBe("Cylinder");
   expect(cylinder).toHaveProperty("vertexes");
   expect(cylinder).toHaveProperty("numVertexes");
   expect(cylinder).toHaveProperty("triangles");
@@ -37,8 +50,8 @@ test("Cylinder AdvancedShape", () => {
 });
 
 test("Cylinder DebugShape", () => {
-  const N = 7;
   const cylinder = Cylinder.asDebugShape(N, N);
+  expect(cylinder.name).toBe("Cylinder");
   expect(cylinder).toHaveProperty("vertexes");
   expect(cylinder).toHaveProperty("numVertexes");
   expect(cylinder).toHaveProperty("triangles");

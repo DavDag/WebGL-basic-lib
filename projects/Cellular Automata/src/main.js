@@ -7,9 +7,9 @@ import {programs} from "./shaders.js";
 const S = 512;
 const N = 256;
 
-var isRunning = true;
-var gl = null;
-var textDiv = null;
+let isRunning = true;
+let gl = null;
+let textDiv = null;
 
 const quad = {
   v: new Float32Array([
