@@ -1,3 +1,5 @@
+/** @author: Davide Risaliti davdag24@gmail.com */
+
 import {Vec2} from "webgl-basic-lib";
 
 function sleep(ms) {

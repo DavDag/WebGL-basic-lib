@@ -1,3 +1,5 @@
+/** @author: Davide Risaliti davdag24@gmail.com */
+
 import {RetrieveWebGLContext, Vec2} from "webgl-basic-lib";
 
 import {App} from "./main.js";

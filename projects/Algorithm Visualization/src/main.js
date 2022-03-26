@@ -1,3 +1,5 @@
+/** @author: Davide Risaliti davdag24@gmail.com */
+
 import {Debug, Colors, Vec2} from "webgl-basic-lib";
 
 import {Algorithms} from "./algs.js";

@@ -1,3 +1,5 @@
+/** @author: Davide Risaliti davdag24@gmail.com */
+
 import {Debug, Colors, Shader, Program, Vec2, Vec3, Vec4, Mat2, Mat4} from "webgl-basic-lib";
 
 const V_SH_SRC = 
