@@ -1,6 +1,6 @@
 /** @author: Davide Risaliti davdag24@gmail.com */
 
-import { Program, Shader, Sphere, Vec3, Vec4, Mat4, RealisticShape, Texture, toRad, toDeg } from "webgl-basic-lib";
+import { Program, Shader, Sphere, Vec3, Vec4, Mat4, RealisticShape, Texture, toRad, toDeg, Colors } from "webgl-basic-lib";
 
 const COL_TEXTURE_CONFIGS = (gl) => { return {
   target: gl.TEXTURE_2D,
@@ -9,7 +9,7 @@ const COL_TEXTURE_CONFIGS = (gl) => { return {
   type: gl.UNSIGNED_BYTE,
   wrap: gl.CLAMP_TO_EDGE,
   filter: gl.LINEAR,
-  genMipMap: true,
+  genMipMap: false,
 }};
 
 const NORM_TEXTURE_CONFIGS = (gl) => { return {
@@ -19,7 +19,7 @@ const NORM_TEXTURE_CONFIGS = (gl) => { return {
   type: gl.UNSIGNED_BYTE,
   wrap: gl.CLAMP_TO_EDGE,
   filter: gl.LINEAR,
-  genMipMap: true,
+  genMipMap: false,
 }};
 
 const SPEC_TEXTURE_CONFIGS = (gl) => { return {
@@ -29,7 +29,7 @@ const SPEC_TEXTURE_CONFIGS = (gl) => { return {
   type: gl.UNSIGNED_BYTE,
   wrap: gl.CLAMP_TO_EDGE,
   filter: gl.LINEAR,
-  genMipMap: true,
+  genMipMap: false,
 }};
 
 const V_SHADER_SRC =
@@ -88,28 +88,31 @@ varying vec3 vNor;
 varying vec3 vTan;
 varying vec3 vCameraPos;
 varying vec3 vSunPos;
-vec3 CalcLight(vec3 N, vec2 uv, vec3 specular) {
+vec4 CalcLight(vec3 N, vec2 uv, vec3 specular) {
   vec3 texColD = texture2D(uTexDay, uv).rgb;
   vec3 texColN = texture2D(uTexNight, uv).rgb;
 
   float amb = 0.05;
 
   vec3 lightDir = normalize(vSunPos - vPos);
-  float dif = 0.80 * max(dot(lightDir, N), 0.0);
+  float affinity = dot(lightDir, N);
+  float dif = 1.0 * max(affinity, 0.0);
 
-  vec3 viewDir = normalize(vCameraPos - vPos);
-  vec3 reflectDir = reflect(-lightDir, N);
-  float spe = 1.0 * pow(max(dot(viewDir, reflectDir), 0.0), 16.0);
+  if (affinity <= 0.0) {
+    return vec4(texColN * texColN * 5.0, 1.0);
+  }
+  
+  // vec3 viewDir = normalize(vCameraPos - vPos);
+  // vec3 reflectDir = reflect(-lightDir, N);
+  // float spe = 0.5 * pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
 
-  float tot = (amb + dif + spe);
-  return (tot <= 0.06) ? texColN : texColD * tot;
-  return (amb + dif) * texColD + spe * specular;
+  return vec4((amb + dif) * texColD, 1.0);
 }
 void main(void) {
   vec3 texNor = texture2D(uTexNorm, vTex).rgb;
   vec3 texSpe = texture2D(uTexSpec, vTex).rgb;
   vec3 N = normalize(texNor * 2.0 - 1.0);
-  gl_FragColor = vec4(CalcLight(N, vTex, texSpe), 1.0);
+  gl_FragColor = CalcLight(N, vTex, texSpe);
 }
 `;
 
@@ -125,7 +128,7 @@ export class Earth {
     vertbuff:null,
     indibuff:null,
     numindi:null,
-    rawShape:null,
+    ref:null,
   };
   textures={
     DAY:null,
@@ -173,21 +176,12 @@ export class Earth {
     this.program.uTexSpec.update(3);
     this.program.unbind();
     // ============ GL BUFFERS ================
-    const rawShape = Sphere.asRealisticShape(64, 64);  
-    this.buffers.vertbuff = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.vertbuff);
-    gl.bufferData(gl.ARRAY_BUFFER, rawShape.vertexes, gl.STATIC_DRAW);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
-    this.buffers.indibuff = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.buffers.indibuff);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, rawShape.triangles, gl.STATIC_DRAW);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-    this.buffers.numindi = rawShape.numTriangles * 3;
-    this.buffers.rawShape = rawShape;
+    const sphere = Sphere.asDebugShape(64, 64).createBuffers(gl);  
+    this.buffers = sphere;
     // ============ MATRIX ================
     this.mat = Mat4.Identity()
       .translate(new Vec3(0, 0, 0))
-      .scale(Vec3.All(5))
+      .scale(new Vec3(5, 5, 5))
     ;
     // ============ GL TEXTURES ================
     await Promise.allSettled([
@@ -198,23 +192,14 @@ export class Earth {
         .FromUrl(gl, this.texUrl("night.jpg"), COL_TEXTURE_CONFIGS(gl))
         .then((tex) => this.textures.NIGHT=tex),
       Texture
-        .FromUrl(gl, this.texUrl("normal.png"), COL_TEXTURE_CONFIGS(gl))
+        .FromUrl(gl, this.texUrl("normal.png"), NORM_TEXTURE_CONFIGS(gl))
         .then((tex) => this.textures.NORM=tex),
       Texture
-        .FromUrl(gl, this.texUrl("specular.png"), COL_TEXTURE_CONFIGS(gl))
+        .FromUrl(gl, this.texUrl("specular.png"), SPEC_TEXTURE_CONFIGS(gl))
         .then((tex) => this.textures.SPEC=tex),
     ]);
     // =========================================
-    console.log(this);
-  }
-
-  rotate(delta) {
-    const invRotMat = this.mat.clone().scale(Vec3.All(1/5)).inverse();
-    const X = new Vec4(1, 0, 0, 1).transform(invRotMat).toVec3();
-    const Y = new Vec4(0, 1, 0, 1).transform(invRotMat).toVec3();
-    // this.mat.rotate(+delta.y, X);
-    this.mat.rotate(-delta.x, Y);
-    // console.log(X.toString(4), Y.toString(4));
+    // console.log(this);
   }
 
   update(dt) {
@@ -250,6 +235,8 @@ export class Earth {
     Object.values(this.textures)
       .forEach((tex) => tex.unbind());
     this.program.unbind();
+    // this.buffers.rawShape.drawPoints(curr, Colors.White.toVec4(1.0), 5);
+    // this.buffers.rawShape.drawLines(curr, Colors.Yellow.toVec4(1.0));
     // ==============================================
     // Pop planet's matrix
     stack.pop();

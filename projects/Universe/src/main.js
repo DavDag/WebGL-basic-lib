@@ -1,8 +1,10 @@
 /** @author: Davide Risaliti davdag24@gmail.com */
 
-import {Texture, Vec3, Vec4, MatrixStack, Camera, toRad} from "webgl-basic-lib";
+import {Vec3, MatrixStack, Camera, toRad} from "webgl-basic-lib";
+import {DataHandler} from "./data.js";
 import {Earth} from "./earth.js";
-import { Sun } from "./sun.js";
+import {Effects} from "./effects.js";
+import {Sun} from "./sun.js";
 
 const IS_HR = true;
 const TEX_BASE_PATH = "assets";
@@ -17,6 +19,8 @@ export class Universe {
   stack=null;
   modelStack=null;
   camera=null;
+  dataHandler=null;
+  effects=null;
 
   onResize(canvasSize, contextSize) {
     const gl = this.ctx;
@@ -28,6 +32,7 @@ export class Universe {
     const factor = contextSize.w / contextSize.h;
     // Update camera's perspective matrix
     this.camera.ratio = factor;
+    this.effects.updateFB();
   }
 
   zoom=2;
@@ -45,17 +50,18 @@ export class Universe {
     this.lastPos = pos;
   }
 
-  tmptmp=0;
+  tmptmpY=90;
+  tmptmpX=-90;
   onMouseMove(event, pos) {
     if (!this.isDragging) return;
     const delta = this.lastPos.clone().sub(pos);
     this.lastPos = pos;
-    delta.x /= this.ctx.canvas.width;
-    delta.y /= this.ctx.canvas.height;
+    delta.x /= 1000;
+    delta.y /= 1000;
     delta.mul(this.zoom);
-    this.planets.earth.rotate(delta);
-    this.tmptmp -= delta.y * 30;
-    this.tmptmp = Math.max(Math.min(this.tmptmp, 90), -90);
+    this.tmptmpY += delta.y * 90;
+    this.tmptmpY = Math.max(Math.min(this.tmptmpY, 160), 20);
+    this.tmptmpX += delta.x * 90;
     this.#updateCameraPos();
   }
 
@@ -72,9 +78,12 @@ export class Universe {
 
   #updateCameraPos() {
     const cameraPos = new Vec3(0, 0, 0);
-    cameraPos.y = +Math.sin(toRad(this.tmptmp));
-    cameraPos.z = -Math.cos(toRad(this.tmptmp));
-    this.camera.position = new Vec3(0, cameraPos.y, cameraPos.z).mul(5 * this.zoom);
+    const ang1 = toRad(this.tmptmpX);
+    const ang2 = toRad(this.tmptmpY);
+    cameraPos.x = Math.cos(ang1) * Math.sin(ang2);
+    cameraPos.y = Math.cos(ang2);
+    cameraPos.z = -Math.sin(ang1) * Math.sin(ang2);
+    this.camera.position = cameraPos.mul(5 * this.zoom);
   }
 
   async #setup() {
@@ -83,7 +92,9 @@ export class Universe {
     // ============ LOCAL OBJECTS ================
     this.stack = new MatrixStack();
     this.modelStack = new MatrixStack();
-    this.camera = new Camera(45, 1.0, 0.1, 100, new Vec3(0, 0, -10), new Vec3(0, 0, 0), new Vec3(0, 1, 0), true);
+    this.camera = new Camera(45, 1.0, 0.1, 100, new Vec3(0, 0, 10), new Vec3(0, 0, 0), new Vec3(0, 1, 0), true);
+    this.effects = new Effects(gl);
+    this.dataHandler = new DataHandler();
     // ============ SETUP PLANETS ================
     this.planets.earth = new Earth(gl, IS_HR, TEX_BASE_PATH);
     this.planets.sun = new Sun(gl, IS_HR, TEX_BASE_PATH);
@@ -119,11 +130,19 @@ export class Universe {
     // ==========================================
     // Pop camera matrix
     this.stack.pop();
+    gl.disable(gl.DEPTH_TEST);
   }
 
   #draw() {
     const gl = this.ctx;
+    // ============ DRAW SCENE TO OFFSCREEN FB ================
+    this.effects.prepareOffScreenFB();
     this.#drawPlanets();
+    // ================ APPLY BLOOM =================
+    this.effects.bloom(this.dataHandler.bloomForce);
+    // ============ DRAW FINAL SCENE ================
+    this.effects.renderFinalScene(this.dataHandler.exposure);
+    // ==============================================
   }
 
   async run(gl) {

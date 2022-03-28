@@ -31,7 +31,7 @@ uniform sampler2D uTexDay;
 varying vec2 vTex;
 void main(void) {
   vec3 texCol = texture2D(uTexDay, vTex).rgb;
-  gl_FragColor = vec4(texCol, 1.0);
+  gl_FragColor = vec4(texCol * 20.0, 1.0);
 }
 `;
 
@@ -83,7 +83,7 @@ export class Sun {
     this.program.uTexDay.update(0);
     this.program.unbind();
     // ============ GL BUFFERS ================
-    const rawShape = Sphere.asTexturedShape(16, 16);
+    const rawShape = Sphere.asTexturedShape(32, 32);
     this.buffers.vertbuff = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers.vertbuff);
     gl.bufferData(gl.ARRAY_BUFFER, rawShape.vertexes, gl.STATIC_DRAW);
@@ -103,7 +103,7 @@ export class Sun {
         .then((tex) => this.textures.DAY=tex),
     ]);
     // =========================================
-    console.log(this);
+    // console.log(this);
   }
 
   timePassed=0;
@@ -112,7 +112,7 @@ export class Sun {
     this.timePassed += dt;
     this.mat = Mat4.Identity()
       .rotate(toRad(10 * this.timePassed), new Vec3(0, 1, 0))
-      .translate(new Vec3(30, 0, 0))
+      .translate(new Vec3(-30, 0, 0))
       .scale(Vec3.All(25))
     ;
   }
