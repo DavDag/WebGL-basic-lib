@@ -5,7 +5,7 @@ import { Program, Shader, Sphere, Vec3, Vec4, Mat4, RealisticShape, Texture, toR
 const COL_TEXTURE_CONFIGS = (gl) => { return {
   target: gl.TEXTURE_2D,
   level: 0,
-  format: gl.RGBA,
+  format: gl.ext.EXT_sRGB.SRGB_ALPHA_EXT,
   type: gl.UNSIGNED_BYTE,
   wrap: gl.CLAMP_TO_EDGE,
   filter: gl.LINEAR,
@@ -82,36 +82,64 @@ uniform sampler2D uTexDay;
 uniform sampler2D uTexNight;
 uniform sampler2D uTexNorm;
 uniform sampler2D uTexSpec;
+uniform float uUseBlinn;
+uniform float uShininess;
+uniform float uAmbFac;
+uniform float uDifFac;
+uniform float uSpeFac;
+uniform vec3 uLightColor;
 varying vec3 vPos;
 varying vec2 vTex;
 varying vec3 vNor;
 varying vec3 vTan;
 varying vec3 vCameraPos;
 varying vec3 vSunPos;
-vec4 CalcLight(vec3 N, vec2 uv, vec3 specular) {
+
+vec4 CalcLight(vec3 N, vec2 uv, vec3 S) {
   vec3 texColD = texture2D(uTexDay, uv).rgb;
   vec3 texColN = texture2D(uTexNight, uv).rgb;
 
-  float amb = 0.05;
-
+  // Diffuse term
   vec3 lightDir = normalize(vSunPos - vPos);
-  float affinity = dot(lightDir, N);
-  float dif = 1.0 * max(affinity, 0.0);
+  float diffuse = dot(lightDir, N);
 
-  if (affinity <= 0.0) {
-    return vec4(texColN * texColN * 5.0, 1.0);
+  if (diffuse <= 0.0) {
+    float bright = dot(texColN, vec3(0.2126, 0.7152, 0.0722));
+    float mod = bright;
+    mod = (mod > 0.5) ? 1.5 : 1.0;
+    return vec4(texColN * mod, 1.0);
   }
-  
-  // vec3 viewDir = normalize(vCameraPos - vPos);
-  // vec3 reflectDir = reflect(-lightDir, N);
-  // float spe = 0.5 * pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
 
-  return vec4((amb + dif) * texColD, 1.0);
+  diffuse = max(diffuse, 0.0);
+  
+  // Specular term
+  vec3 viewDir = normalize(vCameraPos - vPos);
+  float specular;
+  if (uUseBlinn == 0.0) {
+    vec3 reflectDir = reflect(-lightDir, N);
+    specular = pow(max(dot(viewDir, reflectDir), 0.0), uShininess);
+  } else {
+    vec3 halfwayDir = normalize(lightDir + viewDir);
+    specular = pow(max(dot(N, halfwayDir), 0.0), uShininess);;
+  }
+
+  if (diffuse <= 0.0) specular = 0.0;
+
+  // Combine
+  vec3 amb = uAmbFac * texColD;
+  vec3 dif = uDifFac * texColD * diffuse;
+  vec3 spe = uSpeFac * texColD * S * specular;
+
+  vec3 res = (amb + dif + spe) * uLightColor;
+
+  return vec4(res, 1.0);
 }
+
 void main(void) {
   vec3 texNor = texture2D(uTexNorm, vTex).rgb;
   vec3 texSpe = texture2D(uTexSpec, vTex).rgb;
   vec3 N = normalize(texNor * 2.0 - 1.0);
+
   gl_FragColor = CalcLight(N, vTex, texSpe);
 }
 `;
@@ -166,6 +194,12 @@ export class Earth {
       ["uTexNight", "1i"],
       ["uTexNorm", "1i"],
       ["uTexSpec", "1i"],
+      ["uUseBlinn", "1f"],
+      ["uShininess", "1f"],
+      ["uAmbFac", "1f"],
+      ["uDifFac", "1f"],
+      ["uSpeFac", "1f"],
+      ["uLightColor", "3fv"],
       ["uCameraPos", "3fv"],
       ["uSunPos", "3fv"],
     ]);
@@ -206,7 +240,7 @@ export class Earth {
     const gl = this.ctx;
   }
 
-  draw(stack, sunPos, cameraPos) {
+  draw(stack, cameraPos, sunPos, useBlinn, lightColor, {amb, dif, spe}, shininess) {
     const gl = this.ctx;
     // ============ PRE-SETUP ================
     // Push Matrix into the stack
@@ -218,6 +252,12 @@ export class Earth {
     this.textures.NIGHT.bind(1);
     this.textures.NORM.bind(2);
     this.textures.SPEC.bind(3);
+    this.program.uUseBlinn.update(+useBlinn);
+    this.program.uLightColor.update(lightColor.values);
+    this.program.uAmbFac.update(amb);
+    this.program.uDifFac.update(dif);
+    this.program.uSpeFac.update(spe);
+    this.program.uShininess.update(shininess);
     this.program.uSunPos.update(sunPos.values);
     this.program.uCameraPos.update(cameraPos.values);
     this.program.uMatrix.update(curr.values);

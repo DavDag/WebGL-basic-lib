@@ -10,13 +10,18 @@ async function main() {
   try {
     const app = new Universe();
     const gl = RetrieveWebGLContext("main-canvas");
-    let ext;
-    ext = gl.getExtension('WEBGL_depth_texture');
-    if (ext == null) console.error("WEBGL_depth_texture extension not supported");
-    ext = gl.getExtension('OES_texture_float');
-    if (ext == null) console.error("OES_texture_float extension not supported");
-    // OES_texture_half_float
     Debug.Initialize(gl);
+    // TODO: Add utility
+    gl.ext = {};
+    const extensions = ["WEBGL_depth_texture", "OES_texture_float", "EXT_sRGB"];
+    extensions.forEach((ext) => {
+      const res = gl.getExtension(ext);
+      if (res == null) {
+        console.error(ext + " extension not supported");
+      }
+      gl.ext[ext] = res;
+    });
+    // 
     SetResizeHandler(gl.canvasEl, app);
     SetMouseHandler(gl.canvasEl, app);
     SetKeyboardHandler(gl.canvasEl, app);

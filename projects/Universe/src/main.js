@@ -1,6 +1,6 @@
 /** @author: Davide Risaliti davdag24@gmail.com */
 
-import {Vec3, MatrixStack, Camera, toRad} from "webgl-basic-lib";
+import {Vec3, MatrixStack, Camera, toRad, Colors} from "webgl-basic-lib";
 import {DataHandler} from "./data.js";
 import {Earth} from "./earth.js";
 import {Effects} from "./effects.js";
@@ -125,8 +125,16 @@ export class Universe {
     // Push camera matrix
     this.stack.push(this.camera.mat);
     // ============ DRAW PLANETS ================
-    this.planets.earth.draw(this.stack, sunPosition, this.camera.position);
-    this.planets.sun.draw(this.stack, this.camera.position);
+    this.planets.earth.draw(
+      this.stack, this.camera.position, sunPosition,
+      this.dataHandler.useBlinn,
+      Colors.HexToRgb(this.dataHandler.lightColor).mul(this.dataHandler.lightForce),
+      {amb: this.dataHandler.ambientFactor, dif: this.dataHandler.diffuseFactor, spe: this.dataHandler.specularFactor},
+      this.dataHandler.shininess
+    );
+    this.planets.sun.draw(
+      this.stack, this.camera.position
+    );
     // ==========================================
     // Pop camera matrix
     this.stack.pop();
@@ -135,14 +143,21 @@ export class Universe {
 
   #draw() {
     const gl = this.ctx;
-    // ============ DRAW SCENE TO OFFSCREEN FB ================
+    const fb = this.dataHandler.framebufferOutput;
+    const hasBloom = (fb == "finalScene" || fb == "bloom");
+    const hasToneMapping = (fb == "finalScene");
+    // ==========================================
     this.effects.prepareOffScreenFB();
     this.#drawPlanets();
-    // ================ APPLY BLOOM =================
-    this.effects.bloom(this.dataHandler.bloomForce);
-    // ============ DRAW FINAL SCENE ================
-    this.effects.renderFinalScene(this.dataHandler.exposure);
-    // ==============================================
+    this.effects.preparePostProcessingFB();
+    if (hasBloom) {
+      this.effects.bloom(this.dataHandler.bloomForce);
+    }
+    this.effects.renderFinalScene(
+      hasBloom,
+      hasToneMapping,
+      this.dataHandler.exposure
+    );
   }
 
   async run(gl) {
