@@ -263,7 +263,7 @@ export class Grid {
       this.#program[`uTypeData[${ind}].bord_s`].update((config.bord_s / this.#cellSize));
       this.#program[`uTypeData[${ind}].anim_t`].update(config.anim_t);
     });
-    Program.unbind(this.#gl);
+    this.#program.unbind(this.#gl);
     this.#shouldUpdate = true;
   }
 
@@ -369,7 +369,7 @@ export class Grid {
     gl.drawElements(gl.TRIANGLES, this.numCells.x * this.numCells.y * 6, gl.UNSIGNED_SHORT, 0);
 
     this.#program.disableAttributes();
-    Program.unbind(gl);
+    this.#program.unbind(gl);
     
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);

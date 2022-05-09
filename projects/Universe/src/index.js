@@ -3,25 +3,14 @@
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { RetrieveWebGLContext, Debug, SetResizeHandler, SetMouseHandler, SetKeyboardHandler } from "webgl-basic-lib";
+import { AddExtensions, RetrieveWebGLContext, Debug, SetResizeHandler, SetMouseHandler, SetKeyboardHandler } from "webgl-basic-lib";
 import { Universe } from "./main.js";
 
 async function main() {
   try {
     const app = new Universe();
-    const gl = RetrieveWebGLContext("main-canvas");
-    Debug.Initialize(gl);
-    // TODO: Add utility
-    gl.ext = {};
-    const extensions = ["WEBGL_depth_texture", "OES_texture_float", "EXT_sRGB"];
-    extensions.forEach((ext) => {
-      const res = gl.getExtension(ext);
-      if (res == null) {
-        console.error(ext + " extension not supported");
-      }
-      gl.ext[ext] = res;
-    });
-    // 
+    const gl = RetrieveWebGLContext("webgl", "main-canvas", true);
+    AddExtensions(gl, ["WEBGL_depth_texture", "OES_texture_float", "EXT_sRGB"])
     SetResizeHandler(gl.canvasEl, app);
     SetMouseHandler(gl.canvasEl, app);
     SetKeyboardHandler(gl.canvasEl, app);

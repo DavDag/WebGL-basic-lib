@@ -1,7 +1,7 @@
 /** @author: Davide Risaliti davdag24@gmail.com */
 
 import { MouseHandler, KeyboardHandler, ResizeHandler, Program, Shader, Mat4,
-  Sphere, Icosahedron, Cube, Cylinder, Vec3, Camera, MatrixStack, Colors, Debug, toRad } from "webgl-basic-lib";
+  Sphere, Icosahedron, Cube, Cylinder, Vec3, Camera, MatrixStack, Colors, Debug, toRad, DebugShape } from "webgl-basic-lib";
 
 const DELTA_T = 1000 / 60.0;
 const SPEED = 1 / 1000;
@@ -57,7 +57,7 @@ class MyKHandler extends KeyboardHandler {
   app=null;
   R=false; L=false; U=false; D=false; F=false; B=false;
   constructor(app){ super(); this.app = app; }
-  OnKeyDown(event) {
+  onKeyDown(event) {
     // console.log("Keydown: ", event.code);
     if (event.code === "KeyD") this.R = true;
     if (event.code === "KeyA") this.L = true;
@@ -66,7 +66,7 @@ class MyKHandler extends KeyboardHandler {
     if (event.code === "Space") this.U = true;
     if (event.code === "ShiftLeft") this.D = true;
   }
-  OnKeyUp(event) {
+  onKeyUp(event) {
     // console.log("Keyup: ", event.code);
     if (event.code === "KeyD") this.R = false;
     if (event.code === "KeyA") this.L = false;
@@ -89,7 +89,7 @@ class MyKHandler extends KeyboardHandler {
 class MyRHandler extends ResizeHandler {
   app=null;
   constructor(app){ super(); this.app = app; }
-  OnResize(canvasSize, contextSize) {
+  onResize(canvasSize, contextSize) {
     // console.log("Resize: ", canvasSize.toString(0), contextSize.toString(0));
     const gl = this.app.ctx;
     gl.canvasEl.width  = canvasSize.w;
@@ -212,9 +212,9 @@ export class App {
     
     // Bind attributes
     program.attributes([
-      ["aPos", 3, gl.FLOAT, 32,  0],
-      ["aTex", 2, gl.FLOAT, 32, 12],
-      ["aNor", 3, gl.FLOAT, 32, 20],
+      ["aPos", 3, gl.FLOAT, DebugShape.VertexSize() * 4,  0],
+      ["aTex", 2, gl.FLOAT, DebugShape.VertexSize() * 4, 12],
+      ["aNor", 3, gl.FLOAT, DebugShape.VertexSize() * 4, 20],
     ]);
     
     // Link program
@@ -242,17 +242,17 @@ export class App {
   #createBuffers(vert, indi) {
     const gl = this.ctx;
 
-    const arrbuff = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, arrbuff);
+    const vertbuff = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertbuff);
     gl.bufferData(gl.ARRAY_BUFFER, vert, gl.STATIC_DRAW);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
   
-    const elembuff = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elembuff);
+    const indibuff = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indibuff);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indi, gl.STATIC_DRAW);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
-    return {arrbuff, elembuff, numvert: vert.length, numindi: indi.length};
+    return {vertbuff, indibuff, numvert: vert.length, numindi: indi.length};
   }
 
   #createObjects() {
@@ -276,7 +276,7 @@ export class App {
     };
 
     const rawCube = Cube.asDebugShape();
-    const rawCubeBuffers = this.#createBuffers(rawCube.vertexes, rawCube.triangles);
+    const rawCubeBuffers = rawCube.createBuffers(gl);
     const cube1 = {
       ...rawCubeBuffers,
       ref: rawCube,
@@ -339,9 +339,9 @@ export class App {
     };
 
     const rawCylinder6 = Cylinder.asDebugShape(6);
-    const rawCylinder6Buffers = this.#createBuffers(rawCylinder6.vertexes, rawCylinder6.triangles);
+    const rawCylinder6Buffers = rawCylinder6.createBuffers(gl);
     const rawCylinder12 = Cylinder.asDebugShape(12);
-    const rawCylinder12Buffers = this.#createBuffers(rawCylinder12.vertexes, rawCylinder12.triangles);
+    const rawCylinder12Buffers = rawCylinder12.createBuffers(gl);
     const cylinder1 = {
       ...rawCylinder6Buffers,
       ref: rawCylinder6,
@@ -404,9 +404,9 @@ export class App {
     };
 
     const rawSphere4 = Sphere.asDebugShape(4, 4);
-    const rawSphere4Buffers = this.#createBuffers(rawSphere4.vertexes, rawSphere4.triangles);
+    const rawSphere4Buffers = rawSphere4.createBuffers(gl);
     const rawSphere8 = Sphere.asDebugShape(8, 8);
-    const rawSphere8Buffers = this.#createBuffers(rawSphere8.vertexes, rawSphere8.triangles);
+    const rawSphere8Buffers = rawSphere8.createBuffers(gl);
     const sphere1 = {
       ...rawSphere4Buffers,
       ref: rawSphere4,
@@ -469,9 +469,9 @@ export class App {
     };
 
     const rawIcosahedron0 = Icosahedron.asDebugShape(0);
-    const icosahedron0Buffers = this.#createBuffers(rawIcosahedron0.vertexes, rawIcosahedron0.triangles);
+    const icosahedron0Buffers = rawIcosahedron0.createBuffers(gl);
     const rawIcosahedron2 = Icosahedron.asDebugShape(2);
-    const icosahedron2Buffers = this.#createBuffers(rawIcosahedron2.vertexes, rawIcosahedron2.triangles);
+    const icosahedron2Buffers = rawIcosahedron2.createBuffers(gl);
     const icosahedron1 = {
       ...icosahedron0Buffers,
       ref: rawIcosahedron0,
@@ -566,7 +566,7 @@ export class App {
       // console.log("Camera updated");
       this.camera.movePos(this.kHandler.direction.mul(DELTA_T * SPEED));
     }
-    this.objects.forEach((obj) => { if (obj.update) obj.update(DELTA_T / 1000); });
+    // this.objects.forEach((obj) => { if (obj.update) obj.update(DELTA_T / 1000); });
   }
 
   #drawObjsPass() {
@@ -584,8 +584,8 @@ export class App {
       const curr = this.stack.push(obj.mat);
       
       // Draw object
-      gl.bindBuffer(gl.ARRAY_BUFFER, obj.arrbuff);
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.elembuff);
+      gl.bindBuffer(gl.ARRAY_BUFFER, obj.vertbuff);
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, obj.indibuff);
       this.program.enableAttributes();
       this.program.uMatrix.update(curr.values);
       this.program.uModelMatrix.update(obj.mat.values);
@@ -613,7 +613,7 @@ export class App {
     this.program.uLightCol.update(LIGHT_COLOR.values);
     this.program.uLightDir.update(LIGHT_DIRECTION.values);
     this.objects.forEach((obj) => drawObj(obj, 0));
-    Program.Unbind(gl);
+    this.program.unbind(gl);
     
     // Pop camera matrix
     this.stack.pop();
@@ -630,7 +630,6 @@ export class App {
   }
 
   run(gl) {
-    Debug.Initialize(gl);
     console.log("App starting...");
     this.ctx = gl;
     this.#setup();

@@ -160,18 +160,33 @@ export class Universe {
     );
   }
 
+  async delay(ms) {
+    return new Promise((res, rej) => setTimeout(res, ms));
+  }
+
   async run(gl) {
     this.ctx = gl;
     await this.#setup();
     console.log("Application started");
-    const interval = setInterval(() => {
+    let last = performance.now();
+    const draw = () => {
       try {
+        const now = performance.now();
+        const delta = (now - last);
+        last = now;
+        // console.log(delta);
+        // console.time("Update");
         this.#update(DELTA_T);
+        // console.timeEnd("Update");
+        // console.time("Draw");
         this.#draw();
+        // console.timeEnd("Draw");
+        requestAnimationFrame(draw);
       } catch(e) {
         console.error(e);
-        clearInterval(interval);
+        return;
       }
-    }, DELTA_T * 1000);
+    }
+    requestAnimationFrame(draw);
   }
 }

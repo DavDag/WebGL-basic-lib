@@ -4,14 +4,14 @@ import {RetrieveWebGLContext, SetMouseHandler, SetKeyboardHandler, SetResizeHand
 
 import {App} from "./main.js";
 
-function onload() {
+async function onload() {
   try {
     const app = new App();
-    const gl = RetrieveWebGLContext("main-canvas");
+    const gl = RetrieveWebGLContext("webgl", "main-canvas", true);
+    SetMouseHandler(gl.canvasEl, app.mHandler);
+    SetKeyboardHandler(gl.canvasEl, app.kHandler);
+    SetResizeHandler(gl.canvasEl, app.rHandler);
     app.run(gl);
-    SetMouseHandler("main-canvas", app.mHandler);
-    SetKeyboardHandler("main-canvas", app.kHandler);
-    SetResizeHandler("main-canvas", app.rHandler);
   } catch (e) {
     console.error(e);
   }

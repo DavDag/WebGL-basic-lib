@@ -138,7 +138,7 @@ function onResize(entries) {
 function onload() {
   try {
     canvasPos = getPosition(canvas);
-    const gl = RetrieveWebGLContext("main-canvas");
+    const gl = RetrieveWebGLContext("webgl", "main-canvas", true);
     const obs = new ResizeObserver(onResize);
     obs.observe(gl.canvasEl, {box: "content-box"});
     app.initialize(gl);

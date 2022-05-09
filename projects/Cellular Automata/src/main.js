@@ -152,10 +152,10 @@ export const mouseHandler = {
 };
 
 export const keyboardHandler = {
-  OnKeyDown: function (event) {
+  onKeyDown: function (event) {
 
   },
-  OnKeyUp: function (event) {
+  onKeyUp: function (event) {
     if (event.code == "Space") {
       isRunning = !isRunning;
       if (isRunning) {
@@ -248,9 +248,10 @@ export function main(ctx) {
   
   simProgram.use();
   simProgram.uSize.update(N);
+  simProgram.unbind(gl);
   resProgram.use();
   resProgram.uSize.update(N);
-  Program.unbind(gl);
+  resProgram.unbind(gl);
 
   function draw() {
     if (cellsToUpdate.length > 0) {      
@@ -291,7 +292,7 @@ export function main(ctx) {
       gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_BYTE, 0);
       
       simProgram.disableAttributes();
-      Program.unbind(gl);
+      simProgram.unbind(gl);
       gl.bindBuffer(gl.ARRAY_BUFFER, null);
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
       
@@ -324,7 +325,7 @@ export function main(ctx) {
       gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_BYTE, 0);
       
       resProgram.disableAttributes();
-      Program.unbind(gl);
+      resProgram.unbind(gl);
       gl.bindBuffer(gl.ARRAY_BUFFER, null);
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
       

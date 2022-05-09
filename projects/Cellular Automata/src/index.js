@@ -6,9 +6,9 @@ import {main, mouseHandler, keyboardHandler} from "./main.js";
 
 function onload() {
   try {
-    const gl = RetrieveWebGLContext("main-canvas");
-    SetMouseHandler("main-canvas", mouseHandler);
-    SetKeyboardHandler("main-canvas", keyboardHandler);
+    const gl = RetrieveWebGLContext("webgl", "main-canvas", false);
+    SetMouseHandler(gl.canvasEl, mouseHandler);
+    SetKeyboardHandler(gl.canvasEl, keyboardHandler);
     main(gl);
   } catch (e) {
     console.error(e);
