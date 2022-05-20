@@ -203,6 +203,13 @@ test("Mat4 Perspective", () => {
 	expect(global.CmpMatToArr(mat, expected)).toBe(true);
 });
 
+test("Mat4 Orthogonal", () => {
+  const mat = Mat4.Orthogonal(-10, 10, -10, 10, 1, 7.5);
+  mat.round(2);
+  const expected = [0.10, 0, 0, 0, 0, 0.10, 0, 0, 0, 0, -0.31, 0, 0, 0, -1.31, 1];
+	expect(global.CmpMatToArr(mat, expected)).toBe(true);
+});
+
 test("Mat4 ToMat3", () => {
 	const mat = new Mat4(  0,  1,  2,  3,
                          4,  5,  6,  7,
