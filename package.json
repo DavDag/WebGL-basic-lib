@@ -300,7 +300,7 @@
   },
   "name": "webgl-basic-lib",
   "description": "Simple and expressive utility lib that aims at keeping WebGL at \"low level\" while improving the syntax.\r Written for didactic purposes.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "main": "lib/all.js",
   "files": [
     "lib",
