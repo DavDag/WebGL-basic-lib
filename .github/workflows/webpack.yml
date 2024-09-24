@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
       with:
-        node-version: 16
+        node-version: 20
 
     - run: npm ci
     - run: npm test
@@ -20,12 +20,10 @@ jobs:
 
     - name: Publish Test Summary Results
       run: npx github-actions-ctrf ctrf/ctrf-report.json
-      if: success() || failure()    # run this step even if previous step failed
+      if: success() || failure()
 
-    - name: Test Report
-      uses: dorny/test-reporter@v1
-      if: success() || failure()    # run this step even if previous step failed
+    - name: Upload GitHub Pages artifact
+      uses: actions/upload-pages-artifact@v3.0.1
+      if: success() || failure()
       with:
-        name: JEST Tests            # Name of the check run which will be created
-        path: reports/jest-*.xml    # Path to test results
-        reporter: jest-junit        # Format of test results
+        path: /coverage
