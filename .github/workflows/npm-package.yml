@@ -17,6 +17,17 @@ jobs:
           node-version: 20
       - run: npm ci
       - run: npm test
+      - run: npm run build
+
+      - name: Publish Test Summary Results
+        run: npx github-actions-ctrf ctrf/ctrf-report.json
+        if: success() || failure()
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3.0.1
+        if: success() || failure()
+        with:
+          path: coverage
 
   publish-npm:
     needs: build
@@ -31,3 +42,4 @@ jobs:
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
