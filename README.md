@@ -17,10 +17,12 @@ npm install webgl-basic-lib
 ### jsDelivr
 https://cdn.jsdelivr.net/npm/webgl-basic-lib@latest/lib/all.min.js
 
-## Tests
+## Tests (using JEST)
 
+You can check the current results from the Git Actions<br>
+<table><tr><td>Tests 📝</td><td>Passed ✅</td><td>Failed ❌</td><td>Skipped ⏭️</td><td>Pending ⏳</td><td>Other ❓</td><td>Flaky 🍂</td><td>Duration ⏱️</td></tr><tr><td>193</td><td>193</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>00:00:03</td></tr></table>
 
-## Examples
+## This repo contains 4 demo projects
 
 ### 3D Scene
 ![image](https://github.com/user-attachments/assets/301025e1-f5b1-40cd-8226-0eab0421832f)
@@ -32,8 +34,6 @@ https://cdn.jsdelivr.net/npm/webgl-basic-lib@latest/lib/all.min.js
 ### Cellular Automata
 ![image](https://github.com/user-attachments/assets/8e657229-cd10-4cea-8c7a-e3907b6d5a50)
 
-### Universe Demo
+### Universe
 ![image](https://github.com/user-attachments/assets/7ccdd180-db02-4457-8157-e38676f9cb8c)
-![Uploading image.png…]()
-
-
+![image](https://github.com/user-attachments/assets/20be9577-12fc-47e5-9f0c-00bc1bbb07f0)
