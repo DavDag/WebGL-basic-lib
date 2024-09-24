@@ -67,7 +67,7 @@ export class App {
   #gl;
 
   #grid;
-  
+
   #shouldUpdateCanvas;
   #glContextSize;
   #canvasSize;
@@ -103,12 +103,12 @@ export class App {
   }
 
   initialize(gl) {
-    Debug.Initialize(gl);
+    Debug.Initialize("webgl", gl);
     this.#gl = gl;
     this.#grid = new Grid(gl);
     this.changeAlgorithm("bfs");
   }
-  
+
   onCanvasResizeEvent(canvasSize, glContextSize) {
     this.#canvasSize = canvasSize;
     this.#glContextSize = glContextSize;
@@ -143,12 +143,12 @@ export class App {
       console.error(err);
     }
   }
-  
+
   clearSimulation() {
     this.#grid.clear();
     this.#grid.enableEditing();
   }
-  
+
   resetSimulation() {
     this.#grid.reset();
     this.#grid.enableEditing();
@@ -176,7 +176,7 @@ export class App {
     this.#grid.drag(mousePos);
     this.#isDragging = true;
   }
-  
+
   mouseMove(mousePos) {
     this.#grid.hover(mousePos);
   }
@@ -195,12 +195,12 @@ export class App {
     this.#draw();
     this.#increaseFpsCounter();
   }
-  
+
   #resizeGLViewportIfNeeded(gl) {
     if (this.#shouldUpdateCanvas && (this.#now - this.#canvasSizeUpdateTime) > UPDATE_CANVAS_DELAY) {
       this.#shouldUpdateCanvas   = false;
       this.#canvasSizeUpdateTime = this.#now;
-  
+
       const [cvw, cvh] = this.#canvasSize.values;
       const [glw, glh] = this.#canvasSize.values;
       // const [glw, glh] = this.#glContextSize.values;
@@ -218,7 +218,7 @@ export class App {
       cellCountText.innerText  = `${nch}x${ncv}`;
     }
   }
-  
+
   #increaseFpsCounter() {
     this.#now = performance.now();
     this.#deltaTime = (this.#now - this.#lastTime);
@@ -231,7 +231,7 @@ export class App {
     }
     this.#lastTime = this.#now;
   }
-  
+
   #draw() {
     this.#gl.clearColor(0.0, 0.0, 0.0, 1.0);
     this.#gl.clear(this.#gl.COLOR_BUFFER_BIT | this.#gl.DEPTH_BUFFER_BIT);
