@@ -302,6 +302,7 @@
       "json-summary",
       "lcov"
     ],
+    "coverageDirectory": "coverage",
     "collectCoverage": true,
     "reporters": [
       "default",
