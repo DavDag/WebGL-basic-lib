@@ -1,7 +1,7 @@
 {
   "scripts": {
     "lint": "eslint src/*",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest && jest-coverage-badges",
     "build": "npx webpack --config webpack.config.js --mode=production"
   },
   "devDependencies": {
@@ -298,14 +298,22 @@
       "node_modules",
       "<rootDir>"
     ],
+    "coverageReporters": [
+      "json-summary",
+      "lcov"
+    ],
+    "collectCoverage": true,
     "reporters": [
       "default",
-      ["jest-ctrf-json-reporter", {}]
+      [
+        "jest-ctrf-json-reporter",
+        {}
+      ]
     ]
   },
   "name": "webgl-basic-lib",
   "description": "Simple and expressive utility lib that aims at keeping WebGL at \"low level\" while improving the syntax.\r Written for didactic purposes.",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "main": "lib/all.js",
   "files": [
     "lib",
@@ -329,5 +337,8 @@
   "bugs": {
     "url": "https://github.com/DavDag/WebGL-basic-lib/issues"
   },
-  "homepage": "https://github.com/DavDag/WebGL-basic-lib#readme"
+  "homepage": "https://github.com/DavDag/WebGL-basic-lib#readme",
+  "dependencies": {
+    "jest-coverage-badges": "^1.1.2"
+  }
 }
