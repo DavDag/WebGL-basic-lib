@@ -42,6 +42,11 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
 
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          name: coverage/lcov-report
+
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
