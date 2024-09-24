@@ -22,8 +22,13 @@ jobs:
       run: npx github-actions-ctrf ctrf/ctrf-report.json
       if: success() || failure()
 
+    - name: List files (verify coverage folder exists)
+      run: |
+        ls -la
+        ls -la coverage
+
     - name: Upload GitHub Pages artifact
       uses: actions/upload-pages-artifact@v3.0.1
       if: success() || failure()
       with:
-        path: /coverage
+        path: coverage
